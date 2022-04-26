@@ -1,0 +1,35 @@
+auto_purge: true
+purge_keep_days: 5
+commit_interval: 30
+exclude:
+  domains:
+    - device_tracker
+  entities:
+    - sensor.date
+    - sensor.date_time
+    - sensor.time
+    - sensor.time_date
+    - sensor.processor_use
+    - sensor.memory_free
+    - sensor.memory_use
+    - sensor.swap_free
+    - sensor.swap_use
+    - sensor.swap_use_percent
+    - sensor.cpu_temperature
+    - sensor.voltaje_actual
+    - sensor.swap_use_percent
+    - sensor.internet_ping
+    - switch.212a01_5448e679657f
+    - switch.plug_158d0001b86988
+    - switch.sonoff_1000bcf21c
+    - switch.sonoff_1000c5b120
+    - switch.pihole_switch
+  entity_globs:
+    - sensor.docker_*
+    - sensor.aemet_*
+    - sensor.ble_rssi_*
+    - sensor.ble_voltage_*
+    - sensor.linksys00291_*
+    - sensor.network_*
+    - sensor.ping_*
+    - sensor.*_voltage

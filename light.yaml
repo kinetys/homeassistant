@@ -1,0 +1,20 @@
+- platform: flux_led
+  scan_interval: 30
+  devices:
+    192.168.1.45:
+     name: Acuario
+     mode: "rgb"
+#    192.168.1.75:
+#     name: Cabecero
+#     mode: "rgb"    
+#    192.168.1.98:
+#     name: cuna
+#     mode: "rgb" 
+
+#- platform: philips_ambilight
+#  name: Bedroom Ambilight
+#  host: 192.168.1.17
+#  username: !secret philips_username
+#  password: !secret philips_password
+  
+  

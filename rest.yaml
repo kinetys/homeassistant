@@ -1,0 +1,8 @@
+- scan_interval: 1800
+  resource: https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/FiltroMunicipio/4326
+  sensor:
+    - name: "Precio Gasolina 95 - Repsol"
+      value_template: >-
+        {% set station = value_json['ListaEESSPrecio'] | selectattr('IDEESS', 'match', '9395') | first %}
+        {{ station['Precio Gasolina 95 E5'] | replace(",",".") }}
+      unit_of_measurement: "€/L"  

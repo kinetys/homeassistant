@@ -1,0 +1,22 @@
+# CONTADOR DIAS PARA CONTROL ESTUDIO LUZ
+luz_contador_dias:
+  initial_value: 1 
+# VARIABLES PARA CALCULO DEL CONSUMO EN TRAMOS
+luz_energia_periodo:
+  unit_of_measurement: kWh
+  initial_value: 0  
+luz_energia_mensual:
+  unit_of_measurement: kWh
+  initial_value: 0
+luz_energia_mes_anterior:
+  unit_of_measurement: kWh
+  initial_value: 0    
+  
+# -----------------------------------------------
+# ---------- VARIABLES tarifa fija---------------
+# -----------------------------------------------
+
+# TARIFA FIJO es el calculo de (kwh total mensual) * (precio tarifa fija)
+luz_tarifa_fijo_energia:
+  initial_value: 0  
+

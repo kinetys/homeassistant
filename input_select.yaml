@@ -1,0 +1,13 @@
+select_light:
+  name: Selector de luces
+  options: 
+    - "Led Acuario"
+    - "Luces Acuarios"
+    - "Led Cuna"
+    - "Led Cabecero"
+    - "Led Ambiente"
+    - "Luz Salon"
+    - "Luces Comedor"
+    - "Led Vitrina"
+    - "Luz Habitacion Suite"
+    - "Lampara de pie"

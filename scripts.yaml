@@ -1,0 +1,99 @@
+test_telegram:
+  alias: test telegram
+  sequence:
+  - data:
+      message: test test
+    service: notify.telegram
+  mode: single
+restart_hass:
+  alias: Reiniciar Home Assistant
+  sequence:
+  - service: shell_command.restart_hass
+restart_rpi:
+  alias: Reiniciar RaspBerry Pi
+  sequence:
+  - service: shell_command.restart_rpi
+stop_noip:
+  alias: Parar No-IP
+  sequence:
+  - service: shell_command.stop_noip
+speedtest:
+  alias: Start SpeedTest
+  sequence:
+  - service: speedtestdotnet.speedtest
+renove_duckdns:
+  alias: Renovar Certificado DuckDNS
+  sequence:
+  - service: shell_command.certrenove
+conectphilipsandroidtv:
+  alias: Conectar Android Tv Philips TV
+  sequence:
+  - service: shell_command.tvandroidconect
+conectshieldandroidtv:
+  alias: Conectar Android Tv Shield TV
+  sequence:
+  - service: shell_command.shieldandroidconect
+script_llamada:
+  alias: script llamada
+  sequence:
+  - service: notify.telegram_call
+    data:
+      message: hola esto es una llamada de Callmebot
+  mode: single
+sendgpscar:
+  alias: Envio Localizacion del coche
+  sequence:
+  - service: notify.telegram
+    data:
+      title: Send location
+      message: Location updated.
+      data:
+        location:
+          latitude: '{{states.device_tracker.corolla_hb_ts_parking_location.attributes.latitude}}'
+          longitude: '{{states.device_tracker.corolla_hb_ts_parking_location.attributes.longitude}}'
+
+modo_cine_luz_tv:
+  sequence:
+  - service: light.turn_on
+    data:
+      effect: "FOLLOW_VIDEO: STANDARD"
+    target:
+      entity_id: light.philips_tv
+  mode: single
+  alias: modo cine luz tv
+  
+luz_reset_contadores:
+  alias: 'Luz: reset contadores'
+  sequence: 
+  - service: var.set
+    data:
+      entity_id: var.luz_energia_mes_anterior
+      value_template: '{{ states.var.luz_energia_mensual.state }}' 
+  - delay: 2    
+  - service: var.set
+    data:
+      entity_id: 
+      - var.luz_energia_mensual
+      value: 0      
+  - service: var.set
+    data:
+      entity_id: var.luz_contador_dias                # Ponemos el contador a uno, para automation.luz_calculo_consumo_energia
+      value: 1                  
+  - service: input_datetime.set_datetime
+    data_template:
+     entity_id: input_datetime.luz_fecha_inicio_d1mini
+     datetime: "{{ now().strftime('%Y-%m-%d') }}"
+
+luz_calculo_consumo_energia:
+  alias: 'Luz: Calculo consumo energia'
+  sequence:
+  # DATOS BASE
+  - service: var.set
+    data:
+      entity_id: var.luz_energia_periodo
+      value_template: '{{ states.sensor.consumo_total_hora_casa.state }}'
+  - service: var.set
+    data:
+      entity_id: var.luz_energia_mensual
+      value_template: >-
+        {{ states.var.luz_energia_periodo.state|float + states.var.luz_energia_mensual.state|float }}

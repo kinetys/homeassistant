@@ -1,0 +1,5 @@
+
+luz_fecha_inicio_d1mini:
+    name: 'Luz: fecha control d1mini'
+    has_date: true
+    has_time: false

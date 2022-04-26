@@ -1,0 +1,92 @@
+alarma_casa:
+    name: Alarma Modo Noche
+    initial: off
+    icon: mdi:security-home
+    
+onluzsalon:
+    name: Encender luz salon
+    initial: off
+    icon: mdi:lightbulb-on-outline 
+    
+onluzgateway:
+    name: Encender luz Gateway
+    initial: off
+    icon: mdi:lightbulb-on-outline 
+    
+onluzpuestasol:
+    name: Encender luz puesta de sol
+    initial: off
+    icon: mdi:weather-sunset-down
+
+onledacuariodemo:
+    name: Amanecer acuario demo
+    initial: off
+    icon: mdi:weather-sunset-up
+    
+onledacuariodemo2:
+    name: ON blue acuario demo
+    initial: off
+    
+onledacuariodemo3:
+    name: Atardecer acuario demo
+    initial: off
+    icon: mdi:weather-sunset-down
+    
+onledacuario:
+    name: Amanecer acuario 
+    initial: off
+    icon: mdi:weather-sunset-up
+    
+onledacuario2:
+    name: ON blue acuario 
+    initial: off
+    
+onledacuario3:
+    name: anochecer acuario 
+    initial: off
+    icon: mdi:weather-sunset-down    
+       
+onledacuario4:
+    name: Atardecer acuario 
+    initial: off
+    icon: mdi:weather-sunset-down    
+onledacuario5:
+    name: ON red acuario 
+    initial: off
+tormenta:
+    name: tormenta
+    initial: off   
+    icon: mdi:weather-lightning-rainy
+ventilacionacuario:
+    name: Ventilacion Acuario
+    initial: off 
+ventilacionacuario10l:
+    name: Ventilacion Acuario 10 litros
+    initial: off     
+calefacionacuario:
+    name: Calefacion Acuario
+    initial: off     
+calefacioncaldera:
+    name: Calefacion Caldera
+    initial: off 
+estoyencama:
+    name: Estoy en la cama
+    initial: off
+    icon: mdi:lightbulb-on-outline     
+voyacama:
+    name: Me voy a la cama
+    initial: off
+    icon: mdi:lightbulb-on-outline
+buenasnoches:
+    name: Buenas noches
+    initial: off
+    icon: mdi:lightbulb-on-outline    
+
+musicalaia:
+    name: musica Laia
+    initial: off
+    
+sleep:
+    name: Sleep
+    initial: off    
+    icon: mdi:sleep

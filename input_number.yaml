@@ -1,0 +1,74 @@
+precioluz_alquiler_contador:
+    mode: box #slider: control deslizante, y box: caja con número
+    initial: 0.026630  #Precio por día
+    min: 0
+    max: 1
+dia_renicio_contadores:
+    mode: box 
+    #initial: 1
+    min: 0
+    max: 31
+
+ 
+  
+# -----------------------------------------------
+# ---------- INPUT_NUMBER luz tarifa Fijo -------
+# -----------------------------------------------
+
+precioluz_fijo:
+  mode: box #slider: control deslizante, y box: caja con número
+  unit_of_measurement: '€/kWh'
+  initial: 0.1452
+  min: 0.05
+  max: 0.30
+  step: 0.001
+contrato_luz_potencia_fijo_valle:   # Horario de 0h a 8h
+  mode: box 
+  initial: 3.3       # Potencia contratada en valle
+  min: 0
+  max: 10
+  step: 0.001
+contrato_luz_potencia_fijo_punta:   # Horario de 0h a 8h
+  mode: box 
+  initial: 3.3       # Potencia contratada en punta
+  min: 0
+  max: 10
+  step: 0.001
+precio_luz_potencia_fijo_valle:     # Horario de 0h a 8h
+  mode: box 
+  initial: 0.054542   # 0,084034 importe por peaje acceso + 0,003902 importe por margen de comercializacion fijo "este el precio actual despues de 1 junio"
+  min: 0
+  max: 1
+  step: 0.001
+precio_luz_potencia_fijo_punta:     # Horario de 8h a 24h
+  mode: box 
+  initial: 0.047561  # 0,084034 importe por peaje acceso + 0,003902 importe por margen de comercializacion fijo "este el precio actual despues de 1 junio"
+  min: 0
+  max: 1
+  step: 0.001  
+  
+# -----------------------------------------------
+# ---------- INPUT_NUMBER temporizador de luces--
+# -----------------------------------------------  
+  
+sleep:
+  name: sleep (max. 2min)
+  initial: 45
+  min: 1
+  max: 120
+  step: 1
+  mode: slider
+  unit_of_measurement: Sec
+  icon: mdi:update
+
+# -----------------------------------------------
+# ---------- INPUT_NUMBER contador del gas ------
+# -----------------------------------------------  
+  
+#Consumo_gas:   
+#  name: Consumo Gas
+#  mode: box      
+#  min: 0
+#  max: 1000000
+#  step: 1 
+#  unit_of_measurement: "m3"

@@ -1,0 +1,4 @@
+consumo_edata_mes:
+  source: sensor.edatames_totaal
+  cycle: monthly  
+  offset: 00:00:00

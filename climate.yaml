@@ -1,0 +1,62 @@
+- platform: generic_thermostat
+  name: Ventilacion acuario 100 Litros
+  heater: input_boolean.ventilacionacuario
+  target_sensor: sensor.temperatura_acuario_100l
+  min_temp: 24
+  max_temp: 30
+  ac_mode: true
+  initial_hvac_mode: "off"
+ #####modificar este parametro cuando sea invierno por off y en verano poner cool
+  target_temp: 26.5
+  cold_tolerance: 0.3
+  hot_tolerance: 0.2
+  min_cycle_duration:
+    seconds: 5
+    minutes: 3
+  keep_alive:
+    minutes: 3
+
+- platform: generic_thermostat
+  name: Ventilacion acuario 10 Litros
+  heater: input_boolean.ventilacionacuario10l
+  target_sensor: sensor.temperatura_acuario_10l
+  min_temp: 24
+  max_temp: 30
+  ac_mode: true
+  initial_hvac_mode: "off"
+ #####modificar este parametro cuando sea invierno por off y en verano poner cool
+  target_temp: 26.5
+  cold_tolerance: 0.3
+  hot_tolerance: 0.2
+  min_cycle_duration:
+    seconds: 5
+    minutes: 3
+  keep_alive:
+    minutes: 3
+
+
+- platform: generic_thermostat
+  name: Calefacion acuario
+  heater: input_boolean.calefacionacuario
+  ac_mode: false
+  initial_hvac_mode: "heat" #####modificar este parametro cuando sea invierno por heat y en verano poner off
+  target_sensor: sensor.temperatura_acuario_100l
+  min_temp: 24
+  max_temp: 30
+  target_temp: 26.0
+  cold_tolerance: 0.3
+  hot_tolerance: 0.2
+  min_cycle_duration:
+    seconds: 5
+    minutes: 3
+  keep_alive:
+    minutes: 3   
+    
+
+- platform: floureon
+  name: Termostato Casa
+  mac: A0:43:B0:06:A3:A7
+  host: 192.168.1.73
+  use_external_temp: false    
+
+    
