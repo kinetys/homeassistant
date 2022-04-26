@@ -1,0 +1,308 @@
+###########notificacion de cuando hay una actualizacion#######
+- alias: Update Available Notification
+  initial_state: true
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.updater
+      from: 'off'
+      to: 'on'
+  action:
+    - service: notify.telegram
+      data_template:
+        message: "Home Assistant {{ state_attr('binary_sensor.updater', 'newest_version') }} esta disponible. https://www.home-assistant.io/latest-release-notes/ "
+
+######notificacion de certificado de DuckDNS###############################
+- alias: caducidad duckdns
+  initial_state: true
+  trigger:
+   platform: numeric_state
+   entity_id: sensor.cert_expiry_timestamp_duckdns_org
+   below: '10'
+  action:   
+    - service: notify.telegram
+      data:
+       message: 'Te quedan menos de 10 dias para que caduque el certificado de DuckDNS'
+##########################comando telegram_command#######################
+- alias: 'Telegram bot that reply pong to ping'
+  trigger:
+   - platform: event
+     event_type: telegram_command
+     event_data:
+      command: "/ping"
+   - platform: event
+     event_type: telegram_callback
+     event_data:
+      data: '/ping'  
+  action:
+   - service: notify.telegram
+     data:
+      title: Send location
+      message: Location updated.
+      data:
+       location:
+        latitude: '{{states.device_tracker.corolla_hb_ts_parking_location.attributes.latitude}}'  
+        longitude: '{{states.device_tracker.corolla_hb_ts_parking_location.attributes.longitude}}'  
+
+- alias: 'IPs'
+  trigger:
+   - platform: event
+     event_type: telegram_command
+     event_data:
+      command: "/ip"
+   - platform: event
+     event_type: telegram_callback
+     event_data:
+      data: '/ip'    
+  action:
+   - service: notify.telegram
+     data:
+      message: "Estas son las IPs de IP publica: {{states.sensor.mi_ip_publica.state}} Duckdns:{{states.sensor.duckdns.state}} y No-IP: {{states.sensor.no_ip.state}}"
+
+- alias: 'Telegram bot apagar calefacion'
+  trigger:
+   - platform: event
+     event_type: telegram_command
+     event_data:
+      command: "/calefacionoff"
+   - platform: event
+     event_type: telegram_callback
+     event_data:
+      data: '/calefacionoff'  
+  action:
+   - service: notify.telegram
+     data:
+      message: "Calefacion Apagada"   
+   - service: climate.turn_off 
+     entity_id: climate.termostato_casa 
+
+- alias: 'Telegram bot calefacion en manual'
+  trigger:
+   - platform: event
+     event_type: telegram_command
+     event_data:
+      command: "/calefacionmanual"
+   - platform: event
+     event_type: telegram_callback
+     event_data:
+      data: '/calefacionmanual'  
+  action:
+   - service: notify.telegram
+     data:
+      message: "Calefacion en modo manual"   
+   - service: climate.set_hvac_mode
+     entity_id: climate.termostato_casa
+     data:
+      hvac_mode: heat 
+
+- alias: 'Telegram bot temperaturas casa'
+  trigger:
+   - platform: event
+     event_type: telegram_command
+     event_data:
+      command: "/temphome"
+   - platform: event
+     event_type: telegram_callback
+     event_data:
+      data: '/temphome'  
+  action:
+   - service: notify.telegram
+     data:
+      message: "Las temperaturas de la casa son: Salon {{states.sensor.temperature_158d000488a195.state}}º"
+   - service: notify.telegram
+     data:
+      message: "Media habitaciones {{states.sensor.media_habitaciones_temperatura.state}}º" 
+   - service: notify.telegram
+     data:
+      message: "Hab suite {{states.sensor.ble_temperature_temperatura_suite.state}}º"  
+   - service: notify.telegram
+     data:
+      message: "Hab Laia {{states.sensor.ble_temperature_temperatura_laia.state}}º" 
+   - service: notify.telegram
+     data:
+      message: "Hab Carla {{states.sensor.ble_temperature_temperatura_carla.state}}º" 
+   - service: notify.telegram
+     data:
+      message: "Cocina {{states.sensor.ble_temperature_temperatura_cocina.state}}º" 
+   - service: notify.telegram
+     data:
+      message: "Baño {{states.sensor.ble_temperature_temperatura_bano.state}}º"
+   - service: notify.telegram
+     data:
+      message: "Despacho {{states.sensor.ble_temperature_temperatura_despacho.state}}º"
+   - service: notify.telegram
+     data:
+      message: "Salon {{states.sensor.temperature_158d000488a195.state}}º"
+      
+- alias: 'Apagado Home Assistant telegram'
+  trigger:
+   - platform: event
+     event_type: telegram_command
+     event_data:
+      command: "/resetha"
+   - platform: event
+     event_type: telegram_callback
+     event_data:
+      data: '/resetha'    
+  action:
+   - service: notify.telegram
+     data:
+      message: "Reiniciando Home assistant"   
+   - service: script.restart_hass
+
+- alias: 'Apagado Home Assistant telegram'
+  trigger:
+   - platform: event
+     event_type: telegram_command
+     event_data:
+      command: "/resetpi"
+   - platform: event
+     event_type: telegram_callback
+     event_data:
+      data: '/resetpi'    
+  action:
+   - service: notify.telegram
+     data:
+      message: "Reiniciando Raspberry PI"   
+   - service: script.restart_rpi
+
+
+- alias: 'Encendido kinetys pc telegram'
+  trigger:
+   - platform: event
+     event_type: telegram_command
+     event_data:
+      command: "/kinetyspcon"
+   - platform: event
+     event_type: telegram_callback
+     event_data:
+      data: '/kinetyspcon'    
+  action:
+   - service: notify.telegram
+     data:
+      message: "Encendiendo PC"   
+   - service: switch.turn_on
+     entity_id: switch.kinetys_pc   
+
+
+     
+     
+########################mensajes telegram con botones########     
+- alias: 'lista comandos help'
+  trigger:
+   platform: event
+   event_type: telegram_command
+   event_data:
+    command: "/help"
+  action:   
+   - service: notify.telegram
+     data:
+      message: "Estos son todos los comandos"
+      data:
+        inline_keyboard:
+          - "Mis IPs:/ip"
+          - 'Encender Kinetys PC:/kinetyspcon'
+          - 'Menu Calefacion casa:/calefacionhome'
+          - 'Reiniciar HA:/resetha, Reiniciar RPI:/resetpiquestion'
+          
+- alias: 'Calefacion home'
+  trigger:
+   - platform: event
+     event_type: telegram_command
+     event_data:
+      command: "/calefacionhome"
+   - platform: event
+     event_type: telegram_callback
+     event_data:
+      data: '/calefacionhome'    
+  action:
+   - service: notify.telegram
+     data:
+      message: "Menu calefacion"
+      data:
+        inline_keyboard:
+          - 'Temperaturas casa:/temphome'
+          - 'Encender Calefacion modo manual:/calefacionmanual'
+          - 'Apagar Calefacion:/calefacionoff'          
+
+- alias: 'pregunta reinicio RPI'
+  trigger:
+   - platform: event
+     event_type: telegram_callback
+     event_data:
+      data: '/resetpiquestion'    
+  action:
+   - service: notify.telegram
+     data:
+      message: "Estas Seguro que quieres reiniciar la RaspberryPI"
+      data:
+        inline_keyboard:
+          - "SI:/resetpi, NO:/nothing"
+          
+          
+- alias: 'nada'
+  trigger:
+   - platform: event
+     event_type: telegram_callback
+     event_data:
+      data: '/nothing'    
+  action:
+   - service: notify.telegram
+     data:
+      message: "Vale no hacemos nada"
+
+- alias: 'respuesta si stop_noip'
+  trigger:
+   - platform: event
+     event_type: telegram_callback
+     event_data:
+      data: '/stopnoip'    
+  action:
+   - service: notify.telegram
+     data:
+      message: "Se para NO-IP"         
+   - service: script.turn_on
+     data:
+       entity_id: script.stop_noip
+   - delay: '00:00:05'       
+   - service: switch.turn_off
+     data:
+       entity_id: switch.noip2       
+   - delay: '00:00:05'       
+   - service: switch.turn_on
+     data:
+       entity_id: switch.noip2     
+   - service: notify.telegram
+     data:
+      message: "Se actualiza NO-IP ahora la IP es: {{states.sensor.no_ip.state}}"       
+
+- alias: 'respuesta si reset duckdns'
+  trigger:
+   - platform: event
+     event_type: telegram_callback
+     event_data:
+      data: '/resetduckdns'    
+  action:
+   - service: notify.telegram
+     data:
+      message: "Se resetea DuckDNS"         
+   - service: script.turn_on
+     data:
+       entity_id: script.renove_duckdns  
+   - delay: '00:00:05' 
+   - service: notify.telegram
+     data:
+      message: "Se actualiza DuckDNS ahora la IP es: {{states.sensor.no_ip.state}}"
+
+
+
+- alias: Batería baja tablet
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id: sensor.ags2_w09_battery_level
+    below: '20'
+  action:
+  - service: notify.telegram
+    data:
+      message: Tablet batería baja
+      title: AVISO BATERIA
