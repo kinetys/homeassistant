@@ -1,0 +1,77 @@
+################################################################################
+######################### Baterías Dispositivos ################################
+################################################################################
+
+- platform: template
+  sensors:
+    battery_puerta_principal:
+      friendly_name: 'Batería Sensor Puerta Principal'
+      value_template: >
+          {%- if states.binary_sensor.door_window_sensor_158d0001c10146.attributes.battery_level %}
+              {{ states.binary_sensor.door_window_sensor_158d0001c10146.attributes.battery_level|round }}
+          {% else %}
+              {{ states.binary_sensor.door_window_sensor_158d0001c10146.state }}
+          {%- endif %}
+      icon_template: '{%- if  states.binary_sensor.door_window_sensor_158d0001c10146.attributes.battery_level <= 5 %}mdi:battery-outline{%- elif states.binary_sensor.door_window_sensor_158d0001c10146.attributes.battery_level >= 95 %}mdi:battery{% else %}mdi:battery-{{(states.binary_sensor.door_window_sensor_158d0001c10146.attributes.battery_level|float / 10)|round*10}}{%- endif %}'
+      unit_of_measurement: "%"
+
+
+    battery_sensor_movimiento:
+      friendly_name: 'Batería Sensor Movimiento'
+      value_template: >
+          {%- if states.binary_sensor.motion_sensor_158d0001bd0bac.attributes.battery_level %}
+              {{ states.binary_sensor.motion_sensor_158d0001bd0bac.attributes.battery_level|round }}
+          {% else %}
+              {{ states.binary_sensor.motion_sensor_158d0001bd0bac.state }}
+          {%- endif %}
+      icon_template: '{%- if  states.binary_sensor.motion_sensor_158d0001bd0bac.attributes.battery_level <= 5 %}mdi:battery-outline{%- elif states.binary_sensor.motion_sensor_158d0001bd0bac.attributes.battery_level >= 95 %}mdi:battery{% else %}mdi:battery-{{(states.binary_sensor.motion_sensor_158d0001bd0bac.attributes.battery_level|float / 10)|round*10}}{%- endif %}'
+      unit_of_measurement: "%"
+
+    battery_pulsador:
+      friendly_name: 'Batería pulsador'
+      value_template: >
+          {%- if states.binary_sensor.switch_158d0001bf5349.attributes.battery_level %}
+              {{ states.binary_sensor.switch_158d0001bf5349.attributes.battery_level|round }}
+          {% else %}
+              {{ states.binary_sensor.switch_158d0001bf5349.state }}
+          {%- endif %}
+      icon_template: '{%- if  states.binary_sensor.switch_158d0001bf5349.attributes.battery_level <= 5 %}mdi:battery-outline{%- elif states.binary_sensor.switch_158d0001bf5349.attributes.battery_level >= 95 %}mdi:battery{% else %}mdi:battery-{{(states.binary_sensor.switch_158d0001bf5349.attributes.battery_level|float / 10)|round*10}}{%- endif %}'
+      unit_of_measurement: "%"
+
+    battery_pulsador2:
+      friendly_name: 'Batería pulsador2'
+      value_template: >
+          {%- if states.binary_sensor.switch_158d000373d906.attributes.battery_level %}
+              {{ states.binary_sensor.switch_158d000373d906.attributes.battery_level|round }}
+          {% else %}
+              {{ states.binary_sensor.switch_158d000373d906.state }}
+          {%- endif %}
+      icon_template: '{%- if  states.binary_sensor.switch_158d000373d906.attributes.battery_level <= 5 %}mdi:battery-outline{%- elif states.binary_sensor.switch_158d000373d906.attributes.battery_level >= 95 %}mdi:battery{% else %}mdi:battery-{{(states.binary_sensor.switch_158d000373d906.attributes.battery_level|float / 10)|round*10}}{%- endif %}'
+      unit_of_measurement: "%"       
+      
+    battery_sensor_temperatura:
+      friendly_name: 'Batería sensor temperatura'
+      value_template: >
+          {%- if states.sensor.temperature_158d000488a195.attributes.battery_level %}
+              {{ states.sensor.temperature_158d000488a195.attributes.battery_level|round }}
+          {% else %}
+              {{ states.sensor.temperature_158d000488a195.state }}
+          {%- endif %}
+      icon_template: '{%- if  states.sensor.temperature_158d000488a195.attributes.battery_level <= 5 %}mdi:battery-outline{%- elif states.sensor.temperature_158d000488a195.attributes.battery_level >= 95 %}mdi:battery{% else %}mdi:battery-{{(states.sensor.temperature_158d000488a195.attributes.battery_level|float / 10)|round*10}}{%- endif %}'
+      unit_of_measurement: "%"      
+
+
+################################################################################
+######################### CONSUMO XIAOMI PLUG ##################################
+################################################################################
+- platform: template
+  sensors:
+    load_power:
+      friendly_name: "Potencia W"
+      value_template: '{{ states.switch.plug_158d0001b86988.attributes["load_power"] | replace(" W", "") | float }}'
+      unit_of_measurement: 'W'
+    power_consumed:
+      friendly_name: "Consumo KW"
+      value_template: '{{ states.switch.plug_158d0001b86988.attributes["power_consumed"] | replace(" kW", "") | float }}'
+      unit_of_measurement: 'kW'
+ 

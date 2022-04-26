@@ -1,0 +1,146 @@
+- platform: template
+  sensors:
+    tplinkrepeater_2:
+      friendly_name: 'TP-Link RE-210 5Ghz'
+      value_template: "{{ 'Conectado' if is_state('device_tracker.tplinkrepeater_2', 'home') else 'Apagado' }}"      
+      icon_template: mdi:access-point-network
+    ps4:
+      friendly_name: 'PS4'
+      value_template: "{{ 'Conectado' if is_state('device_tracker.Ps4', 'home') else 'Apagado' }}"      
+      icon_template: mdi:sony-playstation
+    kinetys_pc:
+      friendly_name: 'PC Peter'
+      value_template: "{{ 'Conectado' if is_state('device_tracker.kinetys_pc', 'home') else 'Apagado' }}"   
+      icon_template: mdi:desktop-classic
+    samsungtv:
+      friendly_name: 'TV Samsung 40´'
+      value_template: "{{ 'Conectado' if is_state('device_tracker.samsungtv', 'home') else 'Apagado' }}"  
+      icon_template: mdi:television
+    philipstv:
+      friendly_name: 'Philips TV'
+      value_template: "{{ 'Conectado' if is_state('device_tracker.philipstv', 'home') else 'Apagado' }}"  
+      icon_template: mdi:television
+    ps3:
+      friendly_name: 'PS3'
+      value_template: "{{ 'Conectado' if is_state('device_tracker.ps3', 'home') else 'Apagado' }}"      
+      icon_template: mdi:sony-playstation
+    gateway_xiaomi:
+      friendly_name: 'Gateway Xiaomi'
+      value_template: "{{ 'Conectado' if is_state('device_tracker.gateway_xiaomi', 'home') else 'Apagado' }}" 
+      icon_template: mdi:home-automation
+    tplinkrepeater:
+      friendly_name: 'TP-Link Repeater 5 Ghz'
+      value_template: "{{ 'Conectado' if is_state('device_tracker.tplinkrepeater', 'home') else 'Apagado' }}"
+      icon_template: mdi:access-point-network  
+    routerlinksys:
+      friendly_name: 'Router Linksys'
+      value_template: "{{ 'Conectado' if is_state('device_tracker.routerlinksys', 'home') else 'Apagado' }}"
+      icon_template: mdi:access-point-network   
+    aptplinkdeco1:
+      friendly_name: 'AP TP-Link DECO Salon'
+      value_template: "{{ 'Conectado' if is_state('device_tracker.aptplinkdeco1', 'home') else 'Apagado' }}"
+      icon_template: mdi:access-point-network      
+    aptplinkdeco2:
+      friendly_name: 'AP TP-Link DECO Habitacion'
+      value_template: "{{ 'Conectado' if is_state('device_tracker.aptplinkdeco2', 'home') else 'Apagado' }}"
+      icon_template: mdi:access-point-network        
+    tplinkrepeater_3:
+      friendly_name: 'TP-Link RE-210 2,4Ghz'
+      value_template: "{{ 'Conectado' if is_state('device_tracker.tplinkrepeater_3', 'home') else 'Apagado' }}"
+      icon_template: mdi:access-point-network
+    iphone11sandra:
+      friendly_name: 'iPhone 11 Sandra'
+      value_template: "{{ 'Conectado' if is_state('device_tracker.iphone11sandra', 'home') else 'Apagado' }}"
+      icon_template: mdi:cellphone-iphone
+    iphone12peter:
+      friendly_name: 'iPhone 12 Peter'
+      value_template: "{{ 'Conectado' if is_state('device_tracker.iphone12peter', 'home') else 'Apagado' }}" 
+      icon_template: mdi:cellphone-iphone
+    iphone8carla:
+      friendly_name: 'iPhone 8 Carla'
+      value_template: "{{ 'Conectado' if is_state('device_tracker.iphone8carla', 'home') else 'Apagado' }}" 
+      icon_template: mdi:cellphone-iphone
+    chromecast:
+      friendly_name: 'Chromecast'
+      value_template: "{{ 'Conectado' if is_state('device_tracker.chromecast', 'home') else 'Apagado' }}"  
+      icon_template: mdi:cast
+    tabletpeter:
+      friendly_name: 'Tablet Peter'
+      value_template: "{{ 'Conectado' if is_state('device_tracker.tabletpeter', 'home') else 'Apagado' }}"  
+      icon_template: mdi:tablet-android 
+    portatilcarla:
+      friendly_name: 'Portatil Carla'
+      value_template: "{{ 'Conectado' if is_state('device_tracker.portatilcarlausbwifi', 'home') else 'Apagado' }}"  
+      icon_template: mdi:laptop
+    moviltrabajopeter:
+      friendly_name: 'Movil Trabajo Peter'
+      value_template: "{{ 'Conectado' if is_state('device_tracker.moviltrabajopeter', 'home') else 'Apagado' }}"  
+      icon_template: mdi:cellphone  
+    movilestefania:
+      friendly_name: 'Movil Estefania'
+      value_template: "{{ 'Conectado' if is_state('device_tracker.movilestefania', 'home') else 'Apagado' }}"  
+      icon_template: mdi:cellphone      
+    led_acuario:
+      friendly_name: 'Led acuario'
+      value_template: "{{ 'Conectado' if is_state('device_tracker.led_acuario', 'home') else 'Apagado' }}"  
+      icon_template: mdi:lightbulb-outline
+    led_cuna:
+      friendly_name: 'Led cuna'
+      value_template: "{{ 'Conectado' if is_state('device_tracker.led_cuna', 'home') else 'Apagado' }}"  
+      icon_template: mdi:lightbulb-outline
+    led_cabecero:
+      friendly_name: 'Led cabecero'
+      value_template: "{{ 'Conectado' if is_state('device_tracker.led_cabecero', 'home') else 'Apagado' }}"  
+      icon_template: mdi:lightbulb-outline  
+    portatiltrabajo:
+      friendly_name: 'Portatil trabajo'
+      value_template: "{{ 'Conectado' if is_state('device_tracker.portatiltrabajo', 'home') else 'Apagado' }}"  
+      icon_template: mdi:laptop
+    lolin:
+      friendly_name: 'LOLIN'
+      value_template: "{{ 'Conectado' if is_state('device_tracker.lolin', 'home') else 'Apagado' }}"  
+      icon_template: mdi:chip    
+    lolin2:
+      friendly_name: 'LOLIN 2'
+      value_template: "{{ 'Conectado' if is_state('device_tracker.lolin2tp', 'home') else 'Apagado' }}"  
+      icon_template: mdi:chip 
+    wemosd1:
+      friendly_name: 'wemosd1'
+      value_template: "{{ 'Conectado' if is_state('device_tracker.wemosd1', 'home') else 'Apagado' }}"  
+      icon_template: mdi:chip      
+    sonoff:
+      friendly_name: 'SONOFF'
+      value_template: "{{ 'Conectado' if is_state('device_tracker.sonoff', 'home') else 'Apagado' }}"  
+      icon_template: mdi:power-socket-eu
+    sonoff2:
+      friendly_name: 'sensor temperatura/switch'
+      value_template: "{{ 'Conectado' if is_state('device_tracker.sonoffTH10', 'home') else 'Apagado' }}"  
+      icon_template: mdi:power-socket-eu  
+    shieldtv:
+      friendly_name: 'Nvidia Shield TV'
+      value_template: "{{ 'Conectado' if is_state('device_tracker.shieldtv', 'home') else 'Apagado' }}"  
+      icon_template: mdi:audio-video    
+    portatiltrabajosandra:
+      friendly_name: 'PC Trabajo Sandra'
+      value_template: "{{ 'Conectado' if is_state('device_tracker.portatiltrabajosandra', 'home') else 'Apagado' }}"  
+      icon_template: mdi:desktop-classic 
+    impresora:
+      friendly_name: 'Impresora HP PC'
+      value_template: "{{ 'Conectado' if is_state('device_tracker.impresora', 'home') else 'Apagado' }}"  
+      icon_template: mdi:printer-wireless           
+    acsuite:
+      friendly_name: 'AC Suite'
+      value_template: "{{ 'Conectado' if is_state('device_tracker.acsuite', 'home') else 'Apagado' }}"  
+      icon_template: mdi:air-conditioner     
+    accarla:
+      friendly_name: 'AC Carla'
+      value_template: "{{ 'Conectado' if is_state('device_tracker.accarla', 'home') else 'Apagado' }}"  
+      icon_template: mdi:air-conditioner      
+    vacuum:
+      friendly_name: 'Vacuum'
+      value_template: "{{ 'Conectado' if is_state('device_tracker.vacuum', 'home') else 'Apagado' }}"  
+      icon_template: mdi:robot-vacuum           
+    termotatosalon:
+      friendly_name: 'Termotato salon'
+      value_template: "{{ 'Conectado' if is_state('device_tracker.termotatosalon', 'home') else 'Apagado' }}"  
+      icon_template: mdi:radiator          

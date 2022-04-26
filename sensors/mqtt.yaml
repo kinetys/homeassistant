@@ -1,0 +1,18 @@
+- platform: mqtt
+  name: "Temperatura Acuario 100L"
+  state_topic: "tele/sonoff/SENSOR"
+  unit_of_measurement: °C
+  value_template: "{{ value_json['DS18B20'].Temperature }}"
+  
+- platform: mqtt
+  name: "Temperatura Rack"
+  state_topic: "tele/sonoff2/SENSOR"
+  unit_of_measurement: °C
+  value_template: "{{ value_json['DS18B20'].Temperature }}"  
+  
+#- platform: mqtt
+#  name: "Temperatura Acuario 10L"
+#  state_topic: "tele/ventilacionacuarios/SENSOR"
+#  unit_of_measurement: °C
+#  value_template: "{{ value_json['DS18B20'].Temperature }}"  
+

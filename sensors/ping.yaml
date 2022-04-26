@@ -1,0 +1,19 @@
+- platform: template
+  sensors:
+      ping_kinetyspc_ms:
+        friendly_name: 'Kinetys PC ms'
+        value_template: '{{ states.binary_sensor.kinetys_pc_ping.attributes["round_trip_time_avg"] }}'    
+        unit_of_measurement: "ms"
+- platform: template
+  sensors:
+      ping_shieldtv_ms:
+        friendly_name: 'Shield TV ping'
+        value_template: '{{ states.binary_sensor.shield_tv_ping.attributes["round_trip_time_avg"] }}'    
+        unit_of_measurement: "ms"
+        
+- platform: template
+  sensors:
+      internet_ping:
+        friendly_name: 'Internet ping'
+        value_template: '{{ states.binary_sensor.conexion_internet.attributes["round_trip_time_avg"] }}'    
+        unit_of_measurement: "ms"        

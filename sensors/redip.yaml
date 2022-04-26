@@ -1,0 +1,14 @@
+- platform: template
+  sensors:    
+    ippublica:
+      value_template: "{{ states('sensor.mi_ip_publica') == states('sensor.duckdns') == states('sensor.no_ip') }}"  
+
+- platform: template
+  sensors:    
+    no_ippublica:
+      value_template: "{{ states('sensor.mi_ip_publica') == states('sensor.no_ip') }}"        
+      
+- platform: template
+  sensors:    
+    duckdnsippublica:
+      value_template: "{{ states('sensor.mi_ip_publica') == states('sensor.duckdns') }}"

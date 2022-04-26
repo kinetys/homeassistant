@@ -1,0 +1,26 @@
+- platform: template
+  sensors:
+    kilometos_gasolina_mes:
+      value_template: "{{ ( states('sensor.corolla_hb_ts_current_month_statistics')|float) - ( state_attr('sensor.corolla_hb_ts_current_month_statistics', 'EV_distance'))| round(2)  }}"
+#      name: kilometos en gasolina mes
+      unit_of_measurement: 'Km'
+    total_gastado_mes:
+      value_template: "{{ ((state_attr('sensor.corolla_hb_ts_current_month_statistics', 'Average_fuel_consumed')| round(2)) /100 * ( states('sensor.corolla_hb_ts_current_month_statistics')|float) * ( states('sensor.precio_gasolina_95_repsol')|float))| round(2) }}"
+#      name: Total Gastado Mes
+      unit_of_measurement: '€'   
+    kilometos_gasolina_ano:
+      value_template: "{{ ( states('sensor.corolla_hb_ts_current_year_statistics')|float) - ( state_attr('sensor.corolla_hb_ts_current_year_statistics', 'EV_distance'))| round(2)  }}"
+#      name: kilometos en gasolina año
+      unit_of_measurement: 'Km'
+    total_gastado_ano:
+      value_template: "{{ (( state_attr('sensor.corolla_hb_ts_current_year_statistics', 'Average_fuel_consumed')| round(2)) /100 * ( states('sensor.corolla_hb_ts_current_year_statistics')|float) * ( states('sensor.precio_gasolina_95_repsol')|float))| round(2) }}"
+#      name: Total Gastado año
+      unit_of_measurement: '€'
+    kilometos_gasolina_semana:
+      value_template: "{{ ( states('sensor.corolla_hb_ts_current_week_statistics')|float) - ( state_attr('sensor.corolla_hb_ts_current_week_statistics', 'EV_distance'))| round(2)  }}"
+#      name: kilometos en gasolina año
+      unit_of_measurement: 'Km'
+    total_gastado_semana:
+      value_template: "{{ (( state_attr('sensor.corolla_hb_ts_current_week_statistics', 'Average_fuel_consumed')| round(2)) /100 * ( states('sensor.corolla_hb_ts_current_week_statistics')|float) * ( states('sensor.precio_gasolina_95_repsol')|float))| round(2) }}"
+#      name: Total Gastado año
+      unit_of_measurement: '€'      

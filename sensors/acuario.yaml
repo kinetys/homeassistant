@@ -1,0 +1,77 @@
+- platform: template
+  sensors:
+    calefaccion_acuario_100l_activa:  # 1 si está la orden de funcionar a la caldera
+      friendly_name: Calefaccion Acuario 100L activa
+      value_template: "{{ states.climate.calefacion_acuario.attributes.hvac_action }}"     
+
+- platform: history_stats
+  name: Calentador acuario 100L activa hoy
+  entity_id: sensor.calefaccion_acuario_100l_activa
+  state: heating
+  type: time
+  start: '{{ now().replace(hour=0).replace(minute=0).replace(second=0) }}'
+  end: '{{ now() }}'
+
+- platform: template
+  sensors:    
+    calentador_hoy:
+      value_template: "{% set hours = states('sensor.calentador_acuario_100l_activa_hoy') | float %}
+        {% set minutes = ((hours %1) * 60) | int %}  
+        {% set hours = (hours - (hours % 1)) | int %}  
+        {{ '%02i:%02i'%(hours, minutes) }}"
+  
+- platform: history_stats
+  name:  Calentador acuario 100L activa ayer
+  entity_id: sensor.calefaccion_acuario_100l_activa
+  state: heating
+  type: time
+  end: '{{ now().replace(hour=0).replace(minute=0).replace(second=0) }}'
+  duration:
+      hours: 24   
+
+- platform: template
+  sensors:    
+    calentador_ayer:
+      value_template: "{% set hours = states('sensor.calentador_acuario_100l_activa_ayer') | float %}
+        {% set minutes = ((hours %1) * 60) | int %}  
+        {% set hours = (hours - (hours % 1)) | int %}  
+        {{ '%02i:%02i'%(hours, minutes) }}"
+
+- platform: history_stats
+  name:  Calentador acuario 100L activa semana
+  entity_id: sensor.calefaccion_acuario_100l_activa
+  state: heating
+  type: time
+  start: '{{ as_timestamp( now().replace(hour=0).replace(minute=0).replace(second=0) ) - now().weekday() * 86400 }}'
+  end: '{{ now() }}'    
+
+- platform: template
+  sensors:    
+    calentador_semana:
+      value_template: "{% set hours = states('sensor.calentador_acuario_100l_activa_semana') | float %}
+        {% set minutes = ((hours %1) * 60) | int %}  
+        {% set hours = (hours - (hours % 1)) | int %}  
+        {{ '%02i:%02i'%(hours, minutes) }}"
+
+- platform: history_stats
+  name:  Calentador acuario 100L activa mes
+  entity_id: sensor.calefaccion_acuario_100l_activa
+  state: heating
+  type: time
+  start: '{{ now().replace(day=1).replace(hour=0).replace(minute=0).replace(second=0) }}'
+  end: '{{ now() }}'
+  
+- platform: template
+  sensors:    
+    calentador_mes:
+      value_template: "{% set hours = states('sensor.calentador_acuario_100l_activa_mes') | float %}
+        {% set minutes = ((hours %1) * 60) | int %}  
+        {% set hours = (hours - (hours % 1)) | int %}  
+        {{ '%02i:%02i'%(hours, minutes) }}"      
+    
+- platform: template
+  sensors:
+    luz_acuarios_consumo:
+      friendly_name: Luz Acuarios consumo
+      unit_of_measurement: "W"
+      value_template: "{{ state_attr('switch.212a01_5448e679657f', 'power_cons_electric_power') }}"

@@ -1,0 +1,24 @@
+- platform: template
+  sensors:
+   consumo_actual_casa:
+     friendly_name: "Consumo actual casa"
+     value_template: "{{ (( states('sensor.consumo_actual')|float ) / 1000 )|round(2) }}"   
+     unit_of_measurement: 'kW'
+     device_class: "energy"
+
+
+- platform: template
+  sensors:
+   consumo_total_casa:
+     friendly_name: "Consumo total casa"
+     value_template: "{{ (( states('sensor.consumo_total')|float ) / 100 )|round(2) }}"   
+     unit_of_measurement: 'kWh'
+     device_class: "energy"
+
+- platform: template
+  sensors:
+   consumo_mes_energy:
+     friendly_name: "Consumo mes energy"
+     value_template: "{{ (( states('var.luz_energia_mensual')|float ) )|round(2) }}"   
+     unit_of_measurement: 'kWh'
+     device_class: "energy"

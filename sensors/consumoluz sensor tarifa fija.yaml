@@ -1,0 +1,132 @@
+#-----------------------------------------------
+# ---------- SENSORES Edata ---------------------
+# ----------------------------------------------- 
+##### sensores de EDATA que nos indica los consumos de KWh  
+- platform: template
+  sensors:
+   edatames_totaal:
+     friendly_name: "consumo total mes Edata"
+     value_template: "{{ state_attr ('sensor.edata_vg1p', 'month_kWh') }}"
+     unit_of_measurement: 'kWh'
+     
+- platform: template
+  sensors:
+   edatamespunta_totaal:
+     friendly_name: "consumo total Tramo punta mes Edata"
+     value_template: "{{ state_attr ('sensor.edata_vg1p', 'month_p1_kWh') }}"
+     unit_of_measurement: 'kWh'
+
+- platform: template
+  sensors:
+   edatamesllano_totaal:
+     friendly_name: "consumo total Tramo llano mes Edata"
+     value_template: "{{ state_attr ('sensor.edata_vg1p', 'month_p2_kWh') }}"    
+     unit_of_measurement: 'kWh'
+     
+- platform: template
+  sensors:
+   edatamesvalle_totaal:
+     friendly_name: "consumo total Tramo valle mes Edata"
+     value_template: "{{ state_attr ('sensor.edata_vg1p', 'month_p3_kWh') }}"        
+     unit_of_measurement: 'kWh'
+
+- platform: template
+  sensors:
+   edatamesdias:
+     friendly_name: "mes dias"
+     value_template: "{{ state_attr ('sensor.edata_vg1p', 'month_days') }}" 
+
+# -----------------------------------------------
+# ---------- SENSORES Medidor casa tarifa luz fija------
+# -----------------------------------------------      
+
+- platform: template
+  sensors:
+    # Calculo ENERGIA/CONSUMO
+    # Calculo POTENCIA (Peaje acceso potencia + margen comercialización)
+    luz_tarifa_fijo_potencia_medidorcasa:
+      value_template: "{{ ( states('var.luz_contador_dias')|float * states('input_number.contrato_luz_potencia_fijo_valle')|float * states('input_number.precio_luz_potencia_fijo_valle')|float * 8/24 )| round(2) + ( states('var.luz_contador_dias')|float * states('input_number.contrato_luz_potencia_fijo_punta')|float * states('input_number.precio_luz_potencia_fijo_punta')|float * 16/24 )| round(2) }}"
+      unit_of_measurement: '€'
+    # IMPUESTO LUZ
+    luz_tarifa_fijo_peaje_medidorcasa:
+      value_template: "{{ (( states('sensor.luz_tarifa_fijo_energia_medidorcasa')|float + states('sensor.luz_tarifa_fijo_potencia_medidorcasa')|float ) * 0.0511269632 )|round(2) }}"
+      unit_of_measurement: '€'
+    # IVA (21%)
+    luz_tarifa_fijo_iva21_medidorcasa:
+      value_template: "{{ (( states('sensor.luz_tarifa_fijo_energia_medidorcasa')|float + states('sensor.luz_tarifa_fijo_potencia_medidorcasa')|float + states('sensor.luz_tarifa_fijo_peaje_medidorcasa')|float + states('sensor.luz_alquiler_contador_medidorcasa')|float ) * 0.21 )|round(2) }}"
+      unit_of_measurement: '€'
+    # IVA (10%)  
+    luz_tarifa_fijo_iva10_medidorcasa:
+      value_template: "{{ (( states('sensor.luz_tarifa_fijo_energia_medidorcasa')|float + states('sensor.luz_tarifa_fijo_potencia_medidorcasa')|float + states('sensor.luz_tarifa_fijo_peaje_medidorcasa')|float + states('sensor.luz_alquiler_contador_medidorcasa')|float ) * 0.10 )|round(2) }}"
+      unit_of_measurement: '€'      
+    # TOTAL Con IVA (10%)  
+    luz_tarifa_fijo_total_medidorcasa:
+      value_template: "{{ (( states('sensor.luz_tarifa_fijo_energia_medidorcasa')|float + states('sensor.luz_tarifa_fijo_potencia_medidorcasa')|float + states('sensor.luz_tarifa_fijo_peaje_medidorcasa')|float + states('sensor.luz_alquiler_contador_medidorcasa')|float ) * 1.1 )|round(2) }}"
+      unit_of_measurement: '€'
+    # Estimación mensual
+    luz_tarifa_fijo_total_estimacion_medidorcasa:
+      value_template: "{{ ( states('sensor.luz_tarifa_fijo_total_medidorcasa')|float / states('var.luz_contador_dias')|float * 30 )|round(2) }}"
+      unit_of_measurement: '€' 
+    # Alquiler Contador  
+    luz_alquiler_contador_medidorcasa:
+      value_template: "{{ ( states('input_number.precioluz_alquiler_contador')|float * states('var.luz_contador_dias')|float ) | round(2) }}"
+      #value_template: "{{ ( states('input_number.precioluz_alquiler_contador')|float * 30 )|round(2) }}"
+      unit_of_measurement: '€'  
+    # TARIFA FIJO Precio segun consumo de Kwh
+    luz_tarifa_fijo_energia_medidorcasa:
+      value_template: "{{ ( states.var.luz_energia_mensual.state|float * states.input_number.precioluz_fijo.state|float )|round(2) }}"
+      unit_of_measurement: '€'    
+
+
+# -----------------------------------------------
+# ---------- SENSORES tarifa luz fija------------
+# -----------------------------------------------      
+
+- platform: template
+  sensors:
+    # Calculo ENERGIA/CONSUMO
+    # Calculado con la variable "var.luz_tarifa_fijo_energia" dentro del script de "luz_calculo_consumo_energia", del package luz_datos_comun.yaml
+    # Calculo POTENCIA (Peaje acceso potencia + margen comercialización)
+    luz_tarifa_fijo_potencia:
+      value_template: "{{ ( states('sensor.edatamesdias')|float * states('input_number.contrato_luz_potencia_fijo_valle')|float * states('input_number.precio_luz_potencia_fijo_valle')|float * 8/24 )| round(2) + ( states('sensor.edatamesdias')|float * states('input_number.contrato_luz_potencia_fijo_punta')|float * states('input_number.precio_luz_potencia_fijo_punta')|float * 16/24 )| round(2) }}"
+      unit_of_measurement: '€'
+    # IMPUESTO LUZ
+    luz_tarifa_fijo_peaje:
+      value_template: "{{ (( states('sensor.luz_tarifa_fijo_energia')|float + states('sensor.luz_tarifa_fijo_potencia')|float ) * 0.0511269632 )|round(2) }}"
+      unit_of_measurement: '€'
+    # IVA (21%)
+    luz_tarifa_fijo_iva21:
+      value_template: "{{ (( states('sensor.luz_tarifa_fijo_energia')|float + states('sensor.luz_tarifa_fijo_potencia')|float + states('sensor.luz_tarifa_fijo_peaje')|float + states('sensor.luz_alquiler_contador')|float ) * 0.21 )|round(2) }}"
+      unit_of_measurement: '€'
+    # IVA (10%)  
+    luz_tarifa_fijo_iva10:
+      value_template: "{{ (( states('sensor.luz_tarifa_fijo_energia')|float + states('sensor.luz_tarifa_fijo_potencia')|float + states('sensor.luz_tarifa_fijo_peaje')|float + states('sensor.luz_alquiler_contador')|float ) * 0.10 )|round(2) }}"
+      unit_of_measurement: '€'      
+    # TOTAL Con IVA (10%)  
+    luz_tarifa_fijo_total:
+      value_template: "{{ (( states('sensor.luz_tarifa_fijo_energia')|float + states('sensor.luz_tarifa_fijo_potencia')|float + states('sensor.luz_tarifa_fijo_peaje')|float + states('sensor.luz_alquiler_contador')|float ) * 1.1 )|round(2) }}"
+      unit_of_measurement: '€'
+    # Estimación mensual
+    luz_tarifa_fijo_total_estimacion:
+      value_template: "{{ ( states('sensor.luz_tarifa_fijo_total')|float / states('sensor.edatamesdias')|float * 30 )|round(2) }}"
+      unit_of_measurement: '€' 
+    # Alquiler Contador  
+    luz_alquiler_contador:
+      value_template: "{{ ( states('input_number.precioluz_alquiler_contador')|float * states('sensor.edatamesdias')|float ) | round(2) }}"
+      #value_template: "{{ ( states('input_number.precioluz_alquiler_contador')|float * 30 )|round(2) }}"
+      unit_of_measurement: '€'  
+    # TARIFA FIJO Precio segun consumo de Kwh
+    luz_tarifa_fijo_energia:
+      value_template: "{{ ( states.sensor.edatames_totaal.state|float * states.input_number.precioluz_fijo.state|float )|round(2) }}"
+      unit_of_measurement: '€'    
+
+# -----------------------------------------------
+# ---------- SENSOR Lectura consumo de luz-------
+# -----------------------------------------------      
+
+
+- platform: file
+  name: lectura consumo luz
+  file_path: /config/lecturas_de_gasto_luz_casa.csv
+  value_template: '{{ value.split(";")[1] }}'
+  unit_of_measurement: 'kWh'  

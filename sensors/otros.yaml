@@ -1,0 +1,60 @@
+- platform: template
+  sensors:
+    dia_noche:
+      friendly_name: 'Dia/Noche'
+      value_template: '{% if is_state("sun.sun", "above_horizon") %}Dia{% else %}Noche{% endif %}'
+      icon_template: '{% if is_state("sun.sun", "above_horizon") %}mdi:weather-sunny{% else %}mdi:weather-night{% endif %}'
+
+- platform: template
+  sensors:
+    estado_alarma:
+      friendly_name: 'Estado Alarma Modo Noche'
+      value_template: '{% if is_state("input_boolean.alarma_casa", "on") %}ON Noche{% else %}OFF Noche{% endif %}'
+      icon_template: '{% if is_state("input_boolean.alarma_casa", "on") %}mdi:shield-home{% else %}mdi:shield-outline{% endif %}'
+
+
+- platform: template
+  sensors:
+    actualizacion:
+      friendly_name: 'Actualizacion'
+      value_template: '{% if is_state("binary_sensor.updater", "on") %}Actualizacion Pendiente{% else %}Actualizado{% endif %}'
+      icon_template: '{% if is_state("binary_sensor.updater", "on") %}mdi:archive-arrow-up-outline{% else %}mdi:check{% endif %}'      
+ 
+- platform: command_line
+  name: CPU Temperature
+  command: "cat /sys/class/thermal/thermal_zone0/temp"
+  unit_of_measurement: "°C"
+  value_template: '{{ (value | multiply(0.001)) | round(1) }}'
+  
+- platform: command_line
+  name: "HDD Backup (1Tb Total) En uso:"
+  command: ssh pi@192.168.1.36 du -sh /media/hddnet | awk '{print $1}'
+  scan_interval: 1200
+
+- platform: command_line
+  name: "HDD Disco NAS (1Tb Total) En uso:"
+  command: ssh pi@192.168.1.36 du -sh /media/hddnas | awk '{print $1}'
+  scan_interval: 1200
+
+  
+- platform: time_date
+  display_options:
+   - 'time'
+   - 'date'
+   - 'date_time'
+   - 'time_date'
+   
+
+- platform: uptime
+  name: Tiempo encendido Home Assistant
+  scan_interval: 60
+  
+
+- platform: rest
+  resource: https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/FiltroMunicipio/4326
+  name: "Precio Gasolina 95 - Repsol"
+  value_template: >-
+        {% set station = value_json['ListaEESSPrecio'] | selectattr('IDEESS', 'match', '9395') | first %}
+        {{ station['Precio Gasolina 95 E5'] | replace(",",".") }}
+  unit_of_measurement: "€/L"  
+

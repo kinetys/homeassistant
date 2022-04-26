@@ -1,0 +1,89 @@
+- platform: template
+  sensors:
+    calefaccion_modo:  #el modo puede ser off , heat o auto
+      friendly_name: Calefacción modo
+      value_template: "{{ states.climate.termostato_casa.attributes.operation_mode }}"
+    calefaccion_activa:  # 1 si está la orden de funcionar a la caldera
+      friendly_name: Calefacción activa
+      value_template: "{{ states.climate.termostato_casa.attributes.hvac_action }}"     
+    calefaccion_temperatura:  # Temperatura actual de la  habitacion del termostato
+      friendly_name: Calefacción temperatura
+      value_template: "{{ states.climate.termostato_casa.attributes.current_temperature | float }}"                 
+    calefaccion_setpoint:  # Setpoint a la temperatura que quedamos alcanzar
+      friendly_name: Calefacción setpoint
+      value_template: "{{ states.climate.termostato_casa.attributes.temperature | float }}"   
+
+      
+- platform: history_stats
+  name: Calefacción activa hoy
+  entity_id:  sensor.calefaccion_activa
+  state: heating
+  type: time
+  start: '{{ now().replace(hour=0).replace(minute=0).replace(second=0) }}'
+  end: '{{ now() }}'    
+
+- platform: template
+  sensors:    
+    calefaccion_hoy:
+      value_template: "{% set hours = states('sensor.calefaccion_activa_hoy') | float %}
+        {% set minutes = ((hours %1) * 60) | int %}  
+        {% set hours = (hours - (hours % 1)) | int %}  
+        {{ '%02i:%02i'%(hours, minutes) }}" 
+  
+- platform: history_stats
+  name:  Calefacción activa ayer
+  entity_id:  sensor.calefaccion_activa
+  state: heating
+  type: time
+  end: '{{ now().replace(hour=0).replace(minute=0).replace(second=0) }}'
+  duration:
+      hours: 24   
+  
+- platform: template
+  sensors:    
+    calefaccion_ayer:
+      value_template: "{% set hours = states('sensor.calefaccion_activa_ayer') | float %}
+        {% set minutes = ((hours %1) * 60) | int %}  
+        {% set hours = (hours - (hours % 1)) | int %}  
+        {{ '%02i:%02i'%(hours, minutes) }}" 
+
+- platform: history_stats
+  name:  Calefacción activa semana
+  entity_id:  sensor.calefaccion_activa
+  state: heating
+  type: time
+  start: '{{ as_timestamp( now().replace(hour=0).replace(minute=0).replace(second=0) ) - now().weekday() * 86400 }}'
+  end: '{{ now() }}'    
+
+- platform: template
+  sensors:    
+    calefaccion_semana:
+      value_template: "{% set hours = states('sensor.calefaccion_activa_semana') | float %}
+        {% set minutes = ((hours %1) * 60) | int %}  
+        {% set hours = (hours - (hours % 1)) | int %}  
+        {{ '%02i:%02i'%(hours, minutes) }}"
+
+- platform: history_stats
+  name:  Calefaccion activa mes
+  entity_id:  sensor.calefaccion_activa
+  state: heating
+  type: time
+  start: '{{ now().replace(day=1).replace(hour=0).replace(minute=0).replace(second=0) }}'
+  end: '{{ now() }}'
+  
+- platform: template
+  sensors:    
+    calefaccion_mes:
+      value_template: "{% set hours = states('sensor.calefaccion_activa_mes') | float %}
+        {% set minutes = ((hours %1) * 60) | int %}  
+        {% set hours = (hours - (hours % 1)) | int %}  
+        {{ '%02i:%02i'%(hours, minutes) }}"  
+
+- platform: min_max
+  name: Media habitaciones temperatura
+  type: mean
+  round_digits: 1
+  entity_ids:
+   - sensor.ble_temperature_temperatura_carla
+   - sensor.ble_temperature_temperatura_laia
+   - sensor.ble_temperature_temperatura_suite
