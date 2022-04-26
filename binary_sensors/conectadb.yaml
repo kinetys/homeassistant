@@ -1,0 +1,12 @@
+- platform: command_line
+  command: ssh pi@192.168.1.36 adb connect 192.168.1.104 | grep 'already connected' > nul && (echo "Conectado") || (echo "Desconectado")
+  name: Shield Tv ADB
+  payload_off: "Desconectado"
+  payload_on: "Conectado"  
+ 
+- platform: command_line
+  command: ssh pi@192.168.1.36 adb connect 192.168.1.24 | grep 'already connected' > nul && (echo "Conectado") || (echo "Desconectado")
+  name: Philips Tv ADB
+  payload_off: "Desconectado"
+  payload_on: "Conectado"  
+   

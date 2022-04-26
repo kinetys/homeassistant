@@ -1,0 +1,7 @@
+- platform: command_line
+  name: 'ShieldPLEX estado'
+  command: curl 192.168.1.104:32400 > /dev/null && echo on || echo off
+  scan_interval: 180
+  payload_on: "on"
+  payload_off: "off"  
+  

@@ -1,0 +1,12 @@
+### Sensor Intrusos Red
+## Ejecuta el script para detectar intrusos comprobando la ultima linea, en funcion de el mensaje determina si hay intrusos o no
+## https://home-assistant.io/components/binary_sensor.command_line/
+# Estado script Intrusos en la red
+- platform: command_line
+  command: 'ssh pi@192.168.1.36 sudo sh /home/homeassistant/.homeassistant/ShellScripts/Equipos_Nmap.sh | tail -1'
+  name: 'equipos_nmap'
+  device_class: safety # Determina el icono a usar
+  payload_on: "Intrusos"
+  payload_off: "OK"
+  scan_interval : 120
+  command_timeout: 30

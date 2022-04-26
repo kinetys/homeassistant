@@ -1,0 +1,14 @@
+- platform: command_line
+  command: ssh pi@192.168.1.36 '''df -h | grep '192.168.1.1/disconas' > nul && (echo "Montado") || (echo "Des-Montado")'''
+  name: Montaje HDD Router disconas
+  payload_off: "Des-Montado"
+  payload_on: "Montado" 
+  
+- platform: command_line
+  command: ssh pi@192.168.1.36 '''df -h | grep '192.168.1.1/backups' > nul && (echo "Montado") || (echo "Des-Montado")'''
+  name: Montaje HDD Router backups
+  payload_off: "Des-Montado"
+  payload_on: "Montado"  
+    
+  
+  

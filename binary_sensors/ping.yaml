@@ -1,0 +1,15 @@
+- platform: ping
+  host: 192.168.1.42
+  name: Kinetys PC ping
+  count: 10
+  scan_interval: 600
+- platform: ping
+  host: 192.168.1.104
+  name: Shield TV ping
+  count: 10
+  scan_interval: 600
+- platform: ping
+  host: 1.1.1.1
+  name: Conexion Internet
+  count: 10
+  scan_interval: 300
