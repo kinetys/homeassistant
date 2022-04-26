@@ -1,0 +1,70 @@
+###################DESACTIVADO SOLO PARA AUSENCIA DE 24H##############
+
+
+################################################################################
+######################### Lámparas ON Puesta De Sol ############################
+################################################################################
+- alias: Luces ON puesta sol
+  initial_state: false
+  trigger:
+    platform: sun 
+    event: sunset
+    offset: "+00:15:00"
+  condition:
+    - condition: state
+      entity_id: group.habitantes
+      state: 'not_home'
+    - condition: state
+      entity_id: switch.plug_158d0001b86988
+      state: 'off'
+  action:
+    - service: input_boolean.turn_on
+      data:
+        entity_id: input_boolean.onluzpuestasol
+    - service: switch.turn_on
+      entity_id: switch.plug_158d0001b86988
+    - service: notify.telegram
+      data:
+       message: 'Luz encendidas puesta de sol'
+    - delay: "00:03:30"
+    - service: switch.turn_off
+      entity_id: switch.plug_158d0001b86988
+    - service: input_boolean.turn_off
+      data:
+        entity_id: input_boolean.onluzpuestasol
+    - service: notify.telegram
+      data:
+       message: 'Luz apagadas puesta de sol'    
+################################################################################
+######################### Lámparas OFF Puesta De Sol ############################
+################################################################################      
+  
+       
+- alias: Luces auto OFF puesta sol
+  initial_state: false
+  trigger:
+    platform: state
+    entity_id: group.habitantes
+    from: 'not_home'
+    to: 'home' 
+  condition:
+   - condition: state
+     entity_id: switch.plug_158d0001b86988
+     state: 'on'
+   - condition: state
+     entity_id: input_boolean.onluzpuestasol
+     state: 'on'
+#   - condition: state 
+#     entity_id: automation.simulacion_presencia_luces
+#     state: 'off'
+  action:
+   - service: input_boolean.turn_off
+     data:
+        entity_id: input_boolean.onluzpuestasol
+   - service: notify.telegram
+     data:
+       message: 'Bienvenido a casa luz apagada' 
+   - delay: "00:00:30"
+   - service: switch.turn_off
+     entity_id: switch.plug_158d0001b86988
+    

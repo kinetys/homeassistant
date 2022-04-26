@@ -1,0 +1,120 @@
+################################################################################
+############################### GPS A casa #####################################
+#################################################################################
+#- alias: Notificacion llegada a casa
+#  trigger:
+#    platform: zone
+#    entity_id: device_tracker.iphone_7_the_peter
+#    zone: zone.home
+#    event: enter
+#  action:
+#   - service: notify.mobile_app_iphone_7_the_peter
+#     data:
+#       message: "Has Llegado a casa"
+#   - service: alarm_control_panel.alarm_disarm
+#     data:  
+#       entity_id: alarm_control_panel.house
+#       code: !secret alarm_code
+#
+#- alias: Notificacion salida de casa
+#  trigger:
+#    platform: zone
+#    entity_id: device_tracker.iphone_7_the_peter
+#    zone: zone.home
+#    event: leave
+#  action:
+#   - service: notify.mobile_app_iphone_7_the_peter
+#     data:
+#      title: "Has salido de casa"
+#      message: '¿Activamos alarma?'
+#      data:
+#       push:
+#        category: 'activar_alarma'
+#        
+#        
+#- alias: Notificacion llegada a trabajo
+#  trigger:
+#    platform: zone
+#    entity_id: device_tracker.iphone_7_the_peter
+#    zone: zone.Trabajo
+#    event: enter
+#  condition:
+#    - condition: state
+#      entity_id: alarm_control_panel.house
+#      state: 'disarmed'  
+#  action:
+#   - service: notify.mobile_app_iphone_12_the_peter
+#     data:
+#      title: "No se ha activado la alarma"
+#      message: '¿Activamos alarma?'
+#      data:
+#       push:
+#        category: 'activar_alarma'  
+
+- alias: Notificacion llegada a trabajo coche
+  trigger:
+    platform: zone
+    entity_id: device_tracker.corolla_hb_ts_parking_location
+    zone: zone.Trabajo
+    event: enter 
+  action: 
+   - service: notify.telegram
+     data:
+      title: Envio localizacion
+      message: Localizacion del coche Toyota no olvide de pagar el Parkimentro.
+      data:
+       location:
+        latitude: '{{states.device_tracker.corolla_hb_ts_parking_location.attributes.latitude}}'  
+        longitude: '{{states.device_tracker.corolla_hb_ts_parking_location.attributes.longitude}}'  
+
+- alias: Salida de casa luces encendidas
+  initial_state: true
+  trigger:
+      platform: state
+      entity_id: group.habitantes
+      from: 'home'
+      to: 'not_home'
+  condition:
+    - condition: state  
+      entity_id: group.luces
+      state: 'on'    
+  action:
+    - service: notify.mobile_app_iphone_12_the_peter
+      data:
+       title: "Hay luces encendidas"
+       message: '¿Apagamos la luces?'
+       data:
+        push:
+         category: 'apagar_luces'
+        
+#- alias: Notificacion llegada a casa sandra
+#  trigger:
+#    platform: zone
+#    entity_id: device_tracker.iphone11_sandra
+#    zone: zone.home
+#    event: enter
+#  action:
+#   - service: notify.ios_iphone11_sandra
+#     data:
+#       message: "Has Llegado a casa"
+#   - service: alarm_control_panel.alarm_disarm
+#     data:  
+#       entity_id: alarm_control_panel.house
+#       code: !secret alarm_code
+#
+#- alias: Notificacion salida de casa sandra
+#  trigger:
+#    platform: zone
+#    entity_id: device_tracker.iphone11_sandra
+#    zone: zone.home
+#    event: leave
+#  action:
+#   - service: notify.ios_iphone11_sandra
+#     data:
+#      title: "Has salido de casa"
+#      message: '¿Activamos alarma?'
+#      data:
+#       push:
+#        category: 'activar_alarma'      
+#        
+#        

@@ -1,0 +1,128 @@
+###### Boton on/off luz gateway###############
+- alias: Boton on luz Gateway
+  initial_state: true
+  trigger:
+   - platform: event
+     event_type: xiaomi_aqara.click
+     event_data:
+       entity_id: binary_sensor.switch_158d0001bf5349
+       click_type: double
+  condition: 
+   - condition: state
+     entity_id: light.gateway_light_7811dcaf1a59
+     state: 'off'
+  action:
+   - service: light.turn_on
+     entity_id: light.gateway_light_7811dcaf1a59
+     data_template:
+       rgb_color: [255,255,255]
+       brightness: 255     
+
+- alias: Boton off luz Gateway
+  initial_state: true
+  trigger:
+   - platform: event
+     event_type: xiaomi_aqara.click
+     event_data:
+       entity_id: binary_sensor.switch_158d0001bf5349
+       click_type: double
+  condition: 
+   - condition: state
+     entity_id: light.gateway_light_7811dcaf1a59
+     state: 'on'
+  action:
+   - service: light.turn_off
+     entity_id: light.gateway_light_7811dcaf1a59 
+
+
+###### Boton press doble on/off luz salon auto apaga a los 2 minutos####        
+- alias: boton double auto light on
+  initial_state: true
+  trigger:
+   - platform: event
+     event_type: xiaomi_aqara.click
+     event_data:
+       entity_id: binary_sensor.switch_158d0001bf5349
+       click_type: single #single/double       
+  condition: 
+   - condition: state
+     entity_id: switch.plug_158d0001b86988
+     state: 'off' 
+  action:
+   - service: switch.turn_on
+     entity_id: switch.plug_158d0001b86988
+#   - delay: '00:01:30'  
+#   - service: switch.turn_off
+#     entity_id: switch.plug_158d0001b86988
+     
+- alias: boton double auto light off
+  initial_state: true
+  trigger:
+   - platform: event
+     event_type: xiaomi_aqara.click
+     event_data:
+       entity_id: binary_sensor.switch_158d0001bf5349
+       click_type: single #single/double       
+  condition: 
+   - condition: state
+     entity_id: switch.plug_158d0001b86988
+     state: 'on' 
+  action:  
+   - service: switch.turn_off
+     entity_id: switch.plug_158d0001b86988     
+
+- alias: Boton luz cabecero
+  initial_state: true
+  trigger:
+   - platform: event
+     event_type: xiaomi_aqara.click
+     event_data:
+       entity_id: binary_sensor.switch_158d000373d906
+       click_type: single
+  action:
+   - service: light.toggle
+     entity_id: light.sonoff_100113776e
+     
+- alias: Boton on interruptor habitacion
+  initial_state: true
+  trigger:
+   - platform: event
+     event_type: xiaomi_aqara.click
+     event_data:
+       entity_id: binary_sensor.switch_158d000373d906
+       click_type: double
+  condition: 
+   - condition: state
+     entity_id: switch.sonoff_1000c5b120
+     state: 'off'
+  action:
+   - service: switch.turn_on
+     entity_id: switch.sonoff_1000c5b120   
+
+- alias: Boton off interruptor habitacion
+  initial_state: true
+  trigger:
+   - platform: event
+     event_type: xiaomi_aqara.click
+     event_data:
+       entity_id: binary_sensor.switch_158d000373d906
+       click_type: double
+  condition: 
+   - condition: state
+     entity_id: switch.sonoff_1000c5b120
+     state: 'on'
+  action:
+   - service: switch.turn_off
+     entity_id: switch.sonoff_1000c5b120
+
+- alias: Boton luz cuna
+  initial_state: true
+  trigger:
+   - platform: event
+     event_type: xiaomi_aqara.click
+     event_data:
+       entity_id: binary_sensor.switch_158d000373d906
+       click_type: long_click_press
+  action:
+   - service: light.toggle
+     entity_id: light.sonoff_10011374d5   

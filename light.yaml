@@ -1,0 +1,25 @@
+- alias: apagar todas luces
+  initial_state: true
+  trigger:
+    platform: time
+    at: "01:00"
+  condition:
+    - condition: state
+      entity_id: group.luces
+      state: 'on'
+  action:
+   - service: light.turn_off
+     data:
+      entity_id: group.luces
+   - delay: '00:00:10'
+   - service: switch.turn_off
+     data:
+      entity_id: group.luces
+   - service: input_boolean.turn_off
+     entity_id: input_boolean.onluzgateway
+   - service: input_boolean.turn_off
+     entity_id: input_boolean.onluzsalon 
+   - service: notify.telegram
+     data:
+      message: 'Hay luces encendidas y se van apagar'
+       

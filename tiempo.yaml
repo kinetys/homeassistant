@@ -1,0 +1,18 @@
+- id: 'Minimas de 0grados'
+  alias: Minimas de 0ºC
+  initial_state: true
+  trigger:
+   - platform: time
+     at: '07:00:00'   
+  condition:
+   - condition: numeric_state
+     entity_id: sensor.dark_sky_overnight_low_temperature_0d
+     below: '1'  
+  action: 
+   - service: notify.telegram
+     data:
+      message: 'EL TIEMPO: Hoy hay minimas de por debajo de 0ºC' 
+   - service: persistent_notification.create
+     data:
+       message: "Hoy hay minimas de por debajo de 0ºC"
+       title: "Alerta TIEMPO"   

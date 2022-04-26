@@ -1,0 +1,30 @@
+- alias: Mensaje Intrusos en la red
+  initial_state: true
+  trigger:
+    platform: state
+    entity_id: binary_sensor.equipos_nmap
+    from: 'off'
+    to: 'on'
+  action:
+    - service: notify.telegram
+      data:
+        message: "Hay intrusos en tu red"
+    - service: persistent_notification.create
+      data:
+        message: "Se han detectado intrusos en la red, revisa los LOGs"
+        title: "Alerta de intrusion"
+
+        
+- alias: Dispositivo nuevo conectado
+  initial_state: 'on'
+  trigger:
+    - platform: event
+      event_type: device_tracker_new_device
+  action:
+    - service: persistent_notification.create
+      data:
+        title: "ALERTA: Dispositivo nuevo!"
+        message: "ALERTA: Nuevo dispositivo"
+    - service: notify.telegram
+      data:
+        message: "ALERTA: Nuevo dispositivo"

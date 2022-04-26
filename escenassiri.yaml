@@ -1,0 +1,91 @@
+- alias: Me voy a la cama
+  description: seria encender luz habitacion
+  trigger:
+  - platform: state
+    entity_id: input_boolean.voyacama
+    from: 'off'
+    to: 'on'
+  condition:
+  - condition: state
+    state: noche
+    entity_id: sensor.dia_noche
+  action:
+  - service: switch.turn_on
+    entity_id: switch.sonoff_1000c5b120  
+  - service: input_boolean.turn_off
+    entity_id: input_boolean.voyacama
+    
+- alias: Estoy en la cama
+  description: apagar luz habitacion encender cabecero durante 30 min, luego apagar,
+    encender tv y programar tv que se apague 1 hora después
+  trigger:
+  - platform: state
+    entity_id: input_boolean.estoyencama
+    from: 'off'
+    to: 'on'
+  condition:
+  - condition: state
+    state: noche
+    entity_id: sensor.dia_noche
+  action:
+  - service: input_boolean.turn_off
+    entity_id: input_boolean.estoyencama   
+  - service: switch.turn_off
+    entity_id: switch.sonoff_1000c5b120
+  - service: light.turn_on
+    entity_id: light.cabecero
+  - service: media_player.turn_on
+    entity_id: media_player.chromecast3003
+  - delay: '00:01:00'
+  - service: media_player.select_source
+    entity_id: media_player.samsung_tv
+    data:
+      source_list: TV
+  - delay: '00:30:00'
+  - service: light.turn_off
+    entity_id: light.cabecero
+  - delay: '00:30:00'  
+  - service: media_player.turn_off
+    entity_id: media_player.samsung_tv
+ 
+    
+- alias: buenas noches
+  description:  seria apagar la tv habitacion y todas luces de la casa
+  trigger:
+  - platform: state
+    entity_id: input_boolean.buenasnoches
+    from: 'off'
+    to: 'on'
+  condition:
+  - condition: state
+    state: noche
+    entity_id: sensor.dia_noche
+  action:
+  - service: light.turn_off
+    data:
+     entity_id: group.luces
+  - delay: '00:00:10'
+  - service: switch.turn_off
+    data:
+     entity_id: group.luces
+  - service: media_player.turn_off
+    entity_id: media_player.samsung_tv
+
+
+    
+- alias: musica para Laia
+  description: apagar luz habitacion encender cabecero y enciende tv y pone chromecast
+  trigger:
+  - platform: state
+    entity_id: input_boolean.musicalaia
+    from: 'off'
+    to: 'on'
+  action:
+  - service: input_boolean.turn_off
+    entity_id: input_boolean.musicalaia   
+  - service: switch.turn_off
+    entity_id: switch.sonoff_1000c5b120
+  - service: light.turn_on
+    entity_id: light.cabecero
+  - service: script.turn_on
+    entity_id: script.musicalaiachromecast

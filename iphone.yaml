@@ -1,0 +1,88 @@
+- alias: "ios Alarma dispara Desactivar"
+  initial_state: true
+  trigger:
+    platform: event
+    event_type: ios.notification_action_fired
+    event_data: 
+      actionName: DESARMAR
+  action:
+    service: alarm_control_panel.alarm_disarm
+    data:  
+      entity_id: alarm_control_panel.xiaomi_gateway_alarm
+      code: !secret alarm_code
+      
+      
+- alias: "ios Alarma disparada rearmar"
+  initial_state: true
+  trigger:
+    platform: event
+    event_type: ios.notification_action_fired
+    event_data: 
+      actionName: REARMAR
+  action:
+   - service: alarm_control_panel.alarm_disarm
+     data:  
+      entity_id: alarm_control_panel.xiaomi_gateway_alarm
+      code: !secret alarm_code
+   - delay:
+        seconds: 4
+   - service: alarm_control_panel.alarm_arm_away
+     data:  
+      entity_id: alarm_control_panel.xiaomi_gateway_alarm
+      code: !secret alarm_code
+      
+      
+- alias: "ios Alarma Desactivar"
+  initial_state: true
+  trigger:
+    platform: event
+    event_type: ios.notification_action_fired
+    event_data: 
+      actionName: NOARMED
+  action:
+    service: alarm_control_panel.alarm_disarm
+    data:  
+      entity_id: alarm_control_panel.xiaomi_gateway_alarm
+#      code: !secret alarm_code
+      
+      
+- alias: "ios Alarma Activar"
+  initial_state: true
+  trigger:
+    platform: event
+    event_type: ios.notification_action_fired
+    event_data: 
+      actionName: ARMED
+  action:
+    service: alarm_control_panel.alarm_arm_away
+    data:  
+      entity_id: alarm_control_panel.xiaomi_gateway_alarm
+#      code: !secret alarm_code      
+      
+- alias: "ios luces encendidas apagar"
+  initial_state: true
+  trigger:
+    platform: event
+    event_type: ios.notification_action_fired
+    event_data: 
+      actionName: APAGARLUCES
+  action:
+    - service: light.turn_off
+      entity_id: group.luces
+    - delay:
+        seconds: 4  
+    - service: switch.turn_off
+      entity_id: group.luces      
+       
+- alias: "ios luces encendidas no apagar"
+  initial_state: true
+  trigger:
+    platform: event
+    event_type: ios.notification_action_fired
+    event_data: 
+      actionName: NOAPAGAR
+  action:
+    service: notify.all_devices
+    data:
+     title: "Hay luces encendidas"
+     message: 'OK! dejamos las luces encendidas'          

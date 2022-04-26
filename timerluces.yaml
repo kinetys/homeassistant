@@ -1,0 +1,105 @@
+- alias: Seleccion luz sleep ON
+  trigger:
+      - platform: state
+#        entity_id: input_select.select_light
+        entity_id: input_boolean.sleep
+        to: 'on' 
+  action:
+      - service: light.turn_on
+        data_template:
+          entity_id: >
+            {% if is_state('input_select.select_light', 'Led Acuario') %}
+              light.acuario
+            {% elif is_state('input_select.select_light', 'Led Cuna') %}
+              light.sonoff_10011374d5
+            {% elif is_state('input_select.select_light', 'Led Cabecero') %}
+              light.sonoff_100113776e
+            {% elif is_state('input_select.select_light', 'Led Ambiente') %}
+              light.gateway_light_7811dcaf1a59
+            {% endif %}
+      - service: switch.turn_on
+        data_template:
+          entity_id: >
+            {% if is_state('input_select.select_light', 'Luces Acuarios') %}
+              switch.212a01_5448e679657f
+            {% elif is_state('input_select.select_light', 'Luz Salon') %}
+              switch.relay_lumi_158d000359ae6c_ch0_lumi_158d000359ae6c
+            {% elif is_state('input_select.select_light', 'Luces Comedor') %}
+              switch.relay_lumi_158d000359ae6c_ch1_lumi_158d000359ae6c			  
+            {% elif is_state('input_select.select_light', 'Led Vitrina') %}
+              switch.sonoff_1000078a91			  
+            {% elif is_state('input_select.select_light', 'Luz Habitacion Suite') %}
+              switch.sonoff_1000c5b120
+            {% elif is_state('input_select.select_light', 'Lampara de pie') %}
+              switch.plug_158d0001b86988		  
+            {% endif %}
+
+- alias: Seleccion luz sleep OFF
+  trigger:
+      - platform: state
+#        entity_id: input_select.select_light
+        entity_id: input_boolean.sleep
+        to: 'off' 
+  action:
+      - service: light.turn_off
+        data_template:
+          entity_id: >
+            {% if is_state('input_select.select_light', 'Led Acuario') %}
+              light.acuario
+            {% elif is_state('input_select.select_light', 'Led Cuna') %}
+              light.sonoff_10011374d5
+            {% elif is_state('input_select.select_light', 'Led Cabecero') %}
+              light.sonoff_100113776e
+            {% elif is_state('input_select.select_light', 'Led Ambiente') %}
+              light.gateway_light_7811dcaf1a59
+            {% endif %}
+      - service: switch.turn_off
+        data_template:
+          entity_id: >
+            {% if is_state('input_select.select_light', 'Luces Acuarios') %}
+              switch.212a01_5448e679657f
+            {% elif is_state('input_select.select_light', 'Luz Salon') %}
+              switch.relay_lumi_158d000359ae6c_ch0_lumi_158d000359ae6c
+            {% elif is_state('input_select.select_light', 'Luces Comedor') %}
+              switch.relay_lumi_158d000359ae6c_ch1_lumi_158d000359ae6c			  
+            {% elif is_state('input_select.select_light', 'Led Vitrina') %}
+              switch.sonoff_1000078a91			  
+            {% elif is_state('input_select.select_light', 'Luz Habitacion Suite') %}
+              switch.sonoff_1000c5b120
+            {% elif is_state('input_select.select_light', 'Lampara de pie') %}
+              switch.plug_158d0001b86988		  
+            {% endif %}
+            
+            
+- alias: Timer start Sleep
+  trigger:
+    platform: state
+    entity_id: input_boolean.sleep
+    to: 'on'
+  action:
+    service: timer.start
+    entity_id: timer.sleep
+    data_template:
+      duration: "{{ states('input_number.sleep') }}"
+
+- alias: Timer cancel Sleep
+  trigger:
+    platform: state
+    entity_id: input_boolean.sleep
+    to: 'off'
+  action:
+    service: timer.cancel
+    entity_id: timer.sleep
+
+- alias: Timer stop Sleep
+  trigger: 
+    platform: event
+    event_type: timer.finished
+    event_data:
+      entity_id: timer.sleep
+  action:
+  - service: input_boolean.turn_off
+    data:
+      entity_id: input_boolean.sleep           
+
+     

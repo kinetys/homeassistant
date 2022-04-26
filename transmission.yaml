@@ -1,0 +1,20 @@
+- alias: Completed Torrent
+  initial_state: true
+  trigger:
+    platform: event
+    event_type: transmission_downloaded_torrent
+  action:
+   - service: notify.telegram
+     data:
+      message: "Torrent descargado {{ state_attr('sensor.transmission_completed_torrents', 'torrent_info') }}"
+
+- alias: Paused Torrent
+  initial_state: true
+  trigger:
+    platform: state
+    entity_id: switch.transmission_switch
+    to: 'off'
+  action:
+   - service: notify.telegram
+     data:
+      message: "Torrents Pausado {{ state_attr('sensor.transmission_paused_torrents', 'torrent_info') }}"

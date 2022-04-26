@@ -1,0 +1,96 @@
+- alias: 'Luz actualizar dia'
+  initial_state: true
+  trigger:
+    - platform: time
+      at: '00:00:02'
+  action:
+    - service: var.set
+      data:
+        entity_id: var.luz_contador_dias
+        value_template: >-
+          {{ ( states('var.luz_contador_dias')|float + 1 )|round(0) }}
+
+- alias: 'Luz: Calculo consumo energia'
+  initial_state: true
+  trigger:
+  - platform: time_pattern
+    #hours: '23'
+    minutes: '59'
+    seconds: '55'
+  condition: []
+  action:
+  - service: script.turn_on
+    data:
+      entity_id: script.luz_calculo_consumo_energia
+
+- alias: 'Luz: informe mensual medidor consumo casa mensaje'
+  initial_state: true
+  trigger:
+    - platform: time
+      at: '23:59:40'
+  condition: 
+    - condition: and
+      conditions:
+      - condition: template  # Si es día 1 del mes reiniciamos todos los contadores
+        value_template: >
+          {{ ( now().strftime('%d')|int - 1 )|int == states('input_number.dia_renicio_contadores')|float }}
+  action:         
+    - service: notify.telegram
+      data_template:                                    # Sacado los datos del utility_meter
+        message: >
+          Informe Luz: El gasto de luz del ciclo de facturacion de este mes ha sido {{ states('sensor.luz_tarifa_fijo_total_medidorcasa') }} € {{ states('var.luz_energia_mensual') }} kw Total Mes
+    - service: notify.consumo_luz_medidor_casa
+      data_template: 
+        message: '{{now().strftime("%d-%m-%Y")}}; {{ states.var.luz_energia_mensual.state }}; "kWh"; Fin Mes'
+
+
+
+- alias: 'Luz: informe mensual medidor consumo casa'
+  initial_state: true
+  trigger:
+    - platform: time
+      at: '00:00:02'
+  condition: 
+    - condition: and
+      conditions:
+      - condition: template  # Si es día 1 del mes reiniciamos todos los contadores
+        value_template: >
+          {{ ( now().strftime('%d') )|int == states('input_number.dia_renicio_contadores')|float }}
+  action:
+    - service: notify.telegram
+      data_template:                                    # Sacado los datos del utility_meter
+        message: >
+          Informe Luz: El gasto de luz del ciclo de facturacion de este mes ha sido {{ states('sensor.luz_tarifa_fijo_total_medidorcasa') }} € {{ states('var.luz_energia_mensual') }} kw Total Mes
+    - delay: 10
+    - service: script.turn_on
+      data:
+        entity_id: 
+          - script.luz_reset_contadores
+    - service: notify.telegram
+      data:
+        message: "Informe Luz: Se han reiniciado los contadores."      
+
+- alias: 'Luz: informe edata'
+  initial_state: true
+  trigger:
+    - platform: time
+      at: '00:00:02'
+  condition: 
+    - condition: template  # Si es día 1 del mes reiniciamos todos los contadores
+      value_template: "{{ now().day == 1 }}"
+  action:
+    - service: notify.telegram
+      data_template:                                    # Sacado los datos del utility_meter
+        message: >
+          Informe Luz: El gasto de luz del mes (1 al 30) ha sido {{ states('sensor.luz_tarifa_fijo_total') }} € {{ states('sensor.edatames_totaal') }} kw Total Mes
+
+
+- alias: Valores de consumo a fichero
+  initial_state: true
+  trigger:
+    - platform: time
+      at: '23:05:00'
+  action:
+    - service: notify.consumo_luz_excel
+      data_template: 
+        message: '{{now().strftime("%d-%m-%Y %H:%M")}}; {{ states.sensor.edatames_totaal.state }}'

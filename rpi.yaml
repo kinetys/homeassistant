@@ -1,0 +1,28 @@
+- alias: "Estado corriente RPI"
+  initial_state: true
+  trigger:
+   platform: state
+   entity_id: binary_sensor.rpi_power_status
+   from: 'off'
+   to: 'on'
+  action:
+   service: notify.telegram
+   data:
+    message: 'Hay problema con la fuente de alimentacion de la Rasberry Pi'
+
+
+- alias: "Estado Bluetooth RPI"
+  initial_state: true
+  trigger:
+   platform: state
+   entity_id: switch.bluetooth
+   from: 'on'
+   to: 'off'
+  action:
+   service: notify.telegram
+   data:
+    message: 'No estado funcionando bluetooth de la raspberry'    
+    
+
+         
+    

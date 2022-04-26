@@ -1,0 +1,144 @@
+
+- id: 'baja temperatura dia'
+  alias: Baja temperatura dia
+  initial_state: true
+  trigger: 
+   - entity_id: sensor.media_habitaciones_temperatura
+     platform: numeric_state
+     below: '17'
+   - entity_id: sensor.temperature_158d000488a195
+     platform: numeric_state 
+     below: '18'    
+  condition:
+   - condition: time
+     after: '06:15:00'
+     before: '23:00:00'
+   - condition: state
+     entity_id: climate.termostato_casa
+     state: 'off'  
+  action:
+   - service: climate.set_hvac_mode
+     entity_id: climate.termostato_casa
+     data:
+      temperature: 20
+      hvac_mode: heat
+   - service: notify.telegram
+     data:
+      message: 'MODO Dia baja temperatura : Ha bajado a  Menos de 18ºC la temperatura de la casa, activamos modo manual Heat a 20°.'   
+   - service: notify.telegram
+     data:
+      message: "Apagamos la Calefacion?"
+      data:
+        inline_keyboard:
+          - "Si:/calefacionoff"
+          - 'No:/nothing'
+          - 'Cambiar Modo Manual:/calefacionmanual'
+          - 'Ver temperaturas de la casa:/temphome'
+ 
+- id: 'Alta temperatura'
+  alias: Alta temperatura
+  initial_state: true
+  trigger:   
+   - entity_id: sensor.media_habitaciones_temperatura
+     platform: numeric_state
+     above: '22'
+   - entity_id: sensor.temperature_158d000488a195
+     platform: numeric_state 
+     above: '22'    
+  condition:
+   - condition: state
+     entity_id: climate.termostato_casa
+     state:
+      - 'auto'
+      - 'heat'
+  action:
+   - service: climate.set_temperature
+     entity_id: climate.termostato_casa
+     data:
+      temperature: 18
+      hvac_mode: heat
+   - service: climate.turn_off 
+     entity_id: climate.termostato_casa 
+   - service: notify.telegram
+     data:
+      message: 'Alta temeratura: La calefacción a subido 22ºC la temperatura de la casa, desactivamos Calefacion.'   
+ 
+- id: 'baja temperatura noche'
+  alias: Baja temperatura noche
+  initial_state: true
+  trigger:       
+   - entity_id: sensor.media_habitaciones_temperatura
+     platform: numeric_state
+     below: '17'    
+  condition:
+   - condition: time
+     after: '23:00:00'
+     before: '06:15:00'
+  action:
+   - service: climate.set_temperature
+     entity_id: climate.termostato_casa
+     data:
+      temperature: 20
+      hvac_mode: heat
+   - service: notify.telegram
+     data:
+      message: 'MODO Baja temeratura Noche: Ha bajado a 17ºC la temperatura de la casa, activamos calefación a 20ºC'
+   - delay: "01:00:00"
+   - service: climate.set_temperature
+     entity_id: climate.termostato_casa
+     data:
+      temperature: 18
+      hvac_mode: heat
+   - delay: "00:05:00"     
+   - service: climate.turn_off 
+     entity_id: climate.termostato_casa
+   - service: notify.telegram
+     data:
+      message: 'Desactivamos modo noche baja temperatura'      
+      
+  
+- id: 'Minimas de 0grados noche'
+  alias: Minimas de 0ºC
+  initial_state: true
+  trigger:
+   - platform: time
+     at: '00:00:10'   
+  condition:
+   - condition: numeric_state
+     entity_id: sensor.dark_sky_overnight_low_temperature_0d
+     below: '1'  
+   - condition: state
+     entity_id: automation.baja_temperatura_noche
+     state: "off"
+  action: 
+   - service: automation.turn_on
+     entity_id: automation.baja_temperatura_noche
+   - service: notify.telegram
+     data:
+      message: 'EL TIEMPO: Hoy hay minimas de por debajo de 0ºC activamos Automation baja temperatura noche'
+   - service: persistent_notification.create
+     data:
+       message: "Hoy hay minimas de por debajo de 0ºC activamos: Automation baja temperatura noche"
+       title: "Alerta TIEMPO"   
+      
+
+
+- id: 'Notificacion Programador calefacion 8am'
+  alias: Notificacion Programador calefacion 8am
+  description: Automatismo que salta cuando la calefacion a las 8 AM esta el salon
+    por debajo de 18C y el despacho por debajo de 18C
+  trigger:
+  - platform: state
+    entity_id: switch.schedule_13848c
+    from: 'On'
+    to: Triggered
+  action:
+   - service: notify.telegram
+     data:
+      title: Aviso Calefacion
+      message: Ha saltado la calefacion por que esta el salon a {{states.sensor.temperature_158d000488a195.state}}C
+        y el Despacho a {{states.sensor.ble_temperature_temperatura_despacho.state}}C
+      data:
+        inline_keyboard:
+         - 'Apagar Calefacion:/calefacionoff, Dejar encendida:/nothing'
+      

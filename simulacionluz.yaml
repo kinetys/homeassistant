@@ -1,0 +1,49 @@
+######simulacion de presencia#######
+
+- alias: Simulacion presencia luces
+  initial_state: false
+  trigger:
+    platform: sun
+    event: sunset
+    offset: "+00:10:00"
+  condition:
+    - condition: state
+      entity_id: group.habitantes
+      state: 'not_home'
+  action:
+   - service: switch.turn_on
+     entity_id: switch.plug_158d0001b86988
+   - service: notify.telegram
+     data:
+       message: 'luz encendidas simulacion de presencia empieza'      
+   - delay: '02:00:05'
+   - service: switch.turn_off
+     entity_id: switch.plug_158d0001b86988
+   - service: notify.telegram
+     data:
+       message: 'luz apagadas simulacion de presencia'
+   - delay: '00:30:05'
+   - service: switch.turn_on
+     entity_id: switch.plug_158d0001b86988
+   - service: notify.telegram
+     data:
+       message: 'luz encendidas simulacion de presencia'
+   - delay: '00:30:05'
+   - service: switch.turn_off
+     entity_id: switch.plug_158d0001b86988
+   - service: notify.telegram
+     data:
+       message: 'luz apagadas simulacion de presencia'
+   - delay: '01:00:05'
+   - service: switch.turn_on
+     entity_id: switch.plug_158d0001b86988
+   - service: notify.telegram
+     data:
+       message: 'luz encendidas simulacion de presencia'
+   - delay: '01:30:05'
+   - service: switch.turn_off
+     entity_id: switch.plug_158d0001b86988
+   - service: notify.telegram
+     data:
+       message: 'luz apagadas simulacion de presencia, termina por hoy'
+  

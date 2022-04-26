@@ -1,0 +1,67 @@
+- alias: Valores de consumo medidor a fichero
+  initial_state: true
+  trigger:
+    - platform: time
+      at: '23:59:00'
+  action:
+    - service: notify.consumo_luz_medidor_casa
+      data_template: 
+        message: '{{now().strftime("%d-%m-%Y")}}; {{ states.sensor.consumo_total_dia_casa.state }}; "kWh"'
+
+- alias: Alerta Exceso consumo Electrico 1
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id: sensor.consumo_actual
+    for:
+      hours: 0
+      minutes: 3
+      seconds: 0
+    above: '3300'
+  condition: []
+  action:
+  - service: light.turn_on
+    entity_id: light.gateway_light_7811dcaf1a59
+    data:
+        rgb_color: [190,0,255]
+  - service: notify.telegram
+    data:
+      message: Exceso de consumo de 3.300 W
+      title: ALERTA
+  - service: notify.telegram
+    data:
+     message: 'exceso consumo de luz'
+  - repeat:
+     sequence:
+      - service: tts.google_say
+        data:
+         entity_id: media_player.habitacion_carla_speaker
+         message: exceso consumo de luz
+      - delay: "00:00:10"
+#  - wait_for_trigger:
+     until:
+#    - platform: numeric_state
+       - condition: numeric_state
+         entity_id: sensor.consumo_actual
+         below: '3300'
+  - service: light.turn_on
+    entity_id: light.gateway_light_7811dcaf1a59
+    data:
+        rgb_color: [0,255,0]
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 30
+      milliseconds: 0
+  - service: light.turn_off
+    entity_id: light.gateway_light_7811dcaf1a59
+  - service: notify.telegram
+    data:
+      message: Ya ha bajado el consumo de 3.300 W
+  - service: notify.telegram
+    data:
+     message: 'ya bajado el consumo de luz'
+  - service: tts.google_say
+    data:
+     entity_id: media_player.habitacion_carla_speaker
+     message: ya bajado el consumo de luz

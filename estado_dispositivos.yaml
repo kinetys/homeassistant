@@ -1,0 +1,316 @@
+- alias: "Notificacion PS4 encendida"
+  initial_state: true
+  trigger:
+   platform: state
+   entity_id: device_tracker.ps4
+   from: 'not_home'
+   to: 'home'
+  action:
+   service: notify.telegram
+   data:
+    message: 'PS4 encendida'
+    
+- alias: "Notificacion PS4 Jugando"
+  initial_state: true
+  trigger:
+   platform: state
+   entity_id: media_player.playstation_4
+   to: 'playing'
+  action:
+   service: notify.telegram
+   data:
+    message: "PS4 Jugando a {{ states.media_player.playstation_4.attributes.source }}"
+
+- alias: "Notificacion PS4 en Reposo"
+  initial_state: true
+  trigger:
+   platform: state
+   entity_id: media_player.playstation_4
+   to: 'off'
+  action:
+   service: notify.telegram
+   data:
+    message: "PS4 en reposo"    
+
+- alias: "Notificacion PS4 en standby"
+  initial_state: true
+  trigger:
+   platform: state
+   entity_id: media_player.playstation_4
+   to: 'standby'
+  action:
+   service: notify.telegram
+   data:
+    message: "PS4 en standby"
+
+
+- alias: "Notificacion PS4 idle"
+  initial_state: true
+  trigger:
+   platform: state
+   entity_id: media_player.playstation_4
+   to: 'idle'
+  action:
+   service: notify.telegram
+   data:
+    message: "PS4 en el menu"
+
+- alias: "Notificacion PS4 apagada"
+  initial_state: true
+  trigger:
+   platform: state
+   entity_id: device_tracker.ps4
+   from: 'home'
+   to: 'not_home'
+  action:
+   service: notify.telegram
+   data:
+    message: 'PS4 apagada'
+    
+- alias: "Notificacion Gateway Xiaomi apagada"
+  initial_state: true
+  trigger:
+   platform: state
+   entity_id: device_tracker.gateway_xiaomi
+   from: 'home'
+   to: 'not_home'
+  action:
+   service: notify.telegram
+   data:
+    message: 'Gateway Xiaomi apagada'   
+
+- alias: "Notificacion Gateway Xiaomi encendida"
+  initial_state: true
+  trigger:
+   platform: state
+   entity_id: device_tracker.gateway_xiaomi
+   from: 'not_home'
+   to: 'home'
+  action:
+   service: notify.telegram
+   data:
+    message: 'Gateway Xiaomi encendida'     
+    
+- alias: "Notificacion Pc Peter apagada"
+  initial_state: true
+  trigger:
+   platform: state
+   entity_id: device_tracker.kinetys_pc
+   from: 'home'
+   to: 'not_home'
+  action:
+   service: notify.telegram
+   data:
+    message: 'Pc Peter apagada'   
+
+- alias: "Notificacion Pc Peter encendida"
+  initial_state: true
+  trigger:
+   platform: state
+   entity_id: device_tracker.kinetys_pc
+   from: 'not_home'
+   to: 'home'
+  action:
+   service: notify.telegram
+   data:
+    message: 'Pc Peter encendida'
+
+- alias: "Notificacion Sonoff encendida"
+  initial_state: true
+  trigger:
+   platform: state
+   entity_id: device_tracker.sonoff
+   from: 'not_home'
+   to: 'home'
+  action:
+   service: notify.telegram
+   data:
+    message: 'sonoff encendida'    
+
+- alias: "Notificacion Sonoff apagada"
+  initial_state: true
+  trigger:
+   platform: state
+   entity_id: device_tracker.sonoff
+   from: 'home'
+   to: 'not_home'
+  action:
+   service: notify.telegram
+   data:
+    message: 'sonoff Apagado'   
+
+- alias: "Notificacion lolin encendida"
+  initial_state: true
+  trigger:
+   platform: state
+   entity_id: device_tracker.lolin
+   from: 'not_home'
+   to: 'home'
+  action:
+   service: notify.telegram
+   data:
+    message: 'Lolin encendido'    
+
+- alias: "Notificacion lolin apagada"
+  initial_state: true
+  trigger:
+   platform: state
+   entity_id: device_tracker.lolin
+   from: 'home'
+   to: 'not_home'
+  action:
+   service: notify.telegram
+   data:
+    message: 'Lolin apagado'
+    
+- alias: "Notificacion AP TP-Link DECO Salon encendida"
+  initial_state: true
+  trigger:
+   platform: state
+   entity_id: device_tracker.aptplinkdeco1
+   from: 'not_home'
+   to: 'home'
+  action:
+   service: notify.telegram
+   data:
+    message: 'AP TP-Link DECO Salon encendida'      
+- alias: "Notificacion AP TP-Link DECO Salon apagada"
+  initial_state: true
+  trigger:
+   platform: state
+   entity_id: device_tracker.aptplinkdeco1
+   from: 'home'
+   to: 'not_home'
+  action:
+   service: notify.telegram
+   data:
+    message: 'AP TP-Link DECO Salon apagada'     
+- alias: "Notificacion AP TP-Link DECO habitacion encendida"
+  initial_state: true
+  trigger:
+   platform: state
+   entity_id: device_tracker.aptplinkdeco2
+   from: 'not_home'
+   to: 'home'
+  action:
+   service: notify.telegram
+   data:
+    message: 'AP TP-Link DECO habitacion encendida'      
+- alias: "Notificacion AP TP-Link DECO habitacion apagada"
+  initial_state: true
+  trigger:
+   platform: state
+   entity_id: device_tracker.aptplinkdeco2
+   from: 'home'
+   to: 'not_home'
+  action:
+   service: notify.telegram
+   data:
+    message: 'AP TP-Link DECO habitacion apagada'         
+
+- alias: perdida conexion internet 
+  initial_state: 'on'
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.conexion_internet
+      from: 'on'
+      to: 'off'
+  action:
+    - service: persistent_notification.create
+      data:
+        title: "ALERTA!"
+        message: "ALERTA: No hay internet"
+    - service: notify.ALL_DEVICES
+      data:
+        message: "ALERTA: has perdido la conexion a internet"
+- alias: recuperacion conexion internet
+  initial_state: 'on'
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.conexion_internet
+      from: 'off'
+      to: 'on'
+  action:
+    - service: persistent_notification.create
+      data:
+        title: "ALERTA!"
+        message: "ALERTA: No hay internet"
+    - service: notify.ALL_DEVICES
+      data:
+        message: "ALERTA: Ya has recuperado la conexion a internet"        
+ 
+- alias: "Notificacion Vacuum encendida"
+  initial_state: true
+  trigger:
+   platform: state
+   entity_id: device_tracker.vacuum
+   from: 'not_home'
+   to: 'home'
+  action:
+   service: notify.telegram
+   data:
+    message: 'Vacuum encendido'    
+
+- alias: "Notificacion Vacuum apagada"
+  initial_state: true
+  trigger:
+   platform: state
+   entity_id: device_tracker.vacuum
+   from: 'home'
+   to: 'not_home'
+  action:
+   service: notify.telegram
+   data:
+    message: 'Vacuum apagado'
+
+- alias: "Notificacion termotato salon encendida"
+  initial_state: true
+  trigger:
+   platform: state
+   entity_id: device_tracker.termotatosalon
+   from: 'not_home'
+   to: 'home'
+  action:
+   service: notify.telegram
+   data:
+    message: 'Termotato salon encendido'    
+
+- alias: "Notificacion termotato salon apagada"
+  initial_state: true
+  trigger:
+   platform: state
+   entity_id: device_tracker.termotatosalon
+   from: 'home'
+   to: 'not_home'
+  action:
+   service: notify.telegram
+   data:
+    message: 'Termotato salon apagado'
+
+
+- alias: "Notificacion camara laia encendida"
+  initial_state: true
+  trigger:
+   platform: state
+   entity_id: device_tracker.camara_laia
+   from: 'not_home'
+   to: 'home'
+  action:
+   service: notify.telegram
+   data:
+    message: 'Camara Laia encendido'    
+
+- alias: "Notificacion camara laia apagada"
+  initial_state: true
+  trigger:
+   platform: state
+   entity_id: device_tracker.camara_laia
+   from: 'home'
+   to: 'not_home'
+  action:
+   service: notify.telegram
+   data:
+    message: 'Camara Laia apagado'    
+    
+    
+    

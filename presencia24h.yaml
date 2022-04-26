@@ -1,0 +1,45 @@
+#################################################################
+## modo simulacion presencia Automations ########################
+#################################################################
+#Activa el modo de vacaciones cuando se ha ido 24 horas###
+- alias: Presencia 24 horas
+  initial_state: true
+  trigger:
+      platform: state
+      entity_id: group.habitantes
+      from: 'home'
+      to: 'not_home'
+      for:
+       hours: 24
+       minutes: 0
+       seconds: 0
+  action:
+    - service: homeassistant.turn_on
+      entity_id: automation.simulacion_presencia_luces
+    - service: notify.telegram
+      data:
+       message: 'Activado simulacion de presencia por ausencia de mas 24 horas'
+    - service: climate.turn_off 
+      entity_id: climate.termostato_casa
+    - service: notify.telegram
+      data:
+       message: 'Calefacion apagada por ausencia de mas 24 horas'      
+       
+       
+- alias: simulacion presencia termimada
+  initial_state: false
+  trigger:
+      platform: state
+      entity_id: group.habitantes
+      from: 'not_home'
+      to: 'home'
+  condition:
+   - condition: state
+     entity_id: automation.simulacion_presencia_luces
+     state: 'on' 
+  action:
+   - service: homeassistant.turn_off
+     entity_id: automation.simulacion_presencia_luces
+   - service: notify.telegram
+     data:
+      message: "Desactivado simulacion de presencia"

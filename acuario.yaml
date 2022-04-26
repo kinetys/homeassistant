@@ -1,0 +1,123 @@
+###########pendiente de configurar un switch independiente para el ventilador 100 litros
+#- alias: "ventilacion_acuario_on"
+#  initial_state: true
+#  trigger:
+#    platform: state
+#    entity_id: input_boolean.ventilacionacuario
+#    to: 'on'
+#  action:
+#    - service: switch.turn_on
+#      entity_id: switch.ventilador_100_litros   
+#
+#- alias: "ventilacion_acuario_off"
+#  initial_state: true
+#  trigger:
+#    platform: state
+#    entity_id: input_boolean.ventilacionacuario
+#    to: 'off'
+#  action:
+#    - service: switch.turn_off
+#      entity_id: switch.ventilador_100_litros
+#
+############ventilacion acuario 10 litros
+#- alias: "ventilacion_acuario_10l_on"
+#  initial_state: true
+#  trigger:
+#    platform: state
+#    entity_id: input_boolean.ventilacionacuario10l
+#    to: 'on'
+#  action:
+#    - service: switch.turn_on
+#      entity_id: switch.ventilador_10_litros
+#
+#- alias: "ventilacion_acuario_10l_off"
+#  initial_state: true
+#  trigger:
+#    platform: state
+#    entity_id: input_boolean.ventilacionacuario10l
+#    to: 'off'
+#  action:
+#    - service: switch.turn_off
+#      entity_id: switch.ventilador_10_litros
+#
+#
+- alias: "Calefacion_acuario_on"
+  initial_state: true
+  trigger:
+    platform: state
+    entity_id: input_boolean.calefacionacuario
+    to: 'on'
+  action:
+    - service: switch.turn_on
+      entity_id: switch.sonoff_1000bcf21c
+
+
+- alias: "calefacion_acuario_off"
+  initial_state: true
+  trigger:
+    platform: state
+    entity_id: input_boolean.calefacionacuario
+    to: 'off'
+  action:
+    - service: switch.turn_off
+      entity_id: switch.sonoff_1000bcf21c
+
+###########avisos de temperatura      
+- alias: Temperatua acuario menos 26 grados
+  initial_state: true
+  trigger:
+   platform: numeric_state
+   entity_id: sensor.temperatura_acuario_100l
+   below: '25'
+  action:
+   - service: climate.set_hvac_mode
+     entity_id: climate.calefacion_acuario
+     data:
+      hvac_mode: heat
+###### no hace falta por que hay un automation que solo deja estar activado uno u otro####      
+#   - service: climate.turn_off
+#     entity_id: climate.ventilacion_acuario_100_litros    
+   - service: notify.telegram
+     data:
+      message: 'Acuario ha bajado a 25 Grados'
+
+- alias: Temperatua acuario mas 27 grados
+  initial_state: true
+  trigger:
+   platform: numeric_state
+   entity_id: sensor.temperatura_acuario_100l
+   above: '27'
+  action:
+#    - service: climate.set_hvac_mode
+#      entity_id: climate.ventilacion_acuario_100_litros
+#      data:
+#       hvac_mode: cool  
+    - service: climate.turn_off
+      entity_id: climate.calefacion_acuario
+    - service: input_boolean.turn_off
+      entity_id: input_boolean.calefacionacuario
+    - service: switch.turn_off
+      entity_id: switch.sonoff_1000bcf21c      
+    - service: notify.telegram
+      data:
+       message: 'Acuario ha subido a 27 Grados'
+       
+- alias: "Modo ventilacion a calefacion"
+  initial_state: true
+  trigger:
+    platform: state
+    entity_id: climate.calefacion_acuario
+    to: 'heat'
+  action:
+    - service: climate.turn_off
+      entity_id: climate.ventilacion_acuario_100_litros
+       
+- alias: "Modo calefacion a ventilacion"
+  initial_state: true
+  trigger:
+    platform: state
+    entity_id: climate.ventilacion_acuario_100_litros
+    to: 'cool'
+  action:
+    - service: climate.turn_off
+      entity_id: climate.calefacion_acuario

@@ -1,0 +1,38 @@
+
+
+- alias: conectado googlecast shieldtv chromecast
+  initial_state: true
+  trigger:
+      platform: state
+      entity_id: media_player.shield_tv_android_tv
+      attribute: app_id
+      to: Google Cast
+  action:
+     - service: notify.telegram
+       data:
+        message: "Se ha conectado Shield TV a Youtube por chromecast"       
+        
+- alias: conectado googlecast shieldtv
+  initial_state: true
+  trigger:
+      platform: state
+      entity_id: media_player.shield_tv_android_tv
+      attribute: app_id
+      to: com.google.android.youtube.tv
+  action:
+     - delay: '00:00:10' 
+     - service: notify.telegram
+       data:
+        message: "Se ha conectado Shield TV a Youtube y se esta viendo: {{ state_attr('media_player.shield','media_title') }}"          
+        
+- alias: notificacion volumen alto
+  initial_state: true
+  trigger:
+      platform: numeric_state
+      entity_id: media_player.philips_tv_2
+      attribute: volume_level
+      above: 0.45
+  action:
+     - service: notify.telegram
+       data:
+        message: "volumen alto Philips TV"           

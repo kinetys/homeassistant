@@ -1,0 +1,101 @@
+- id: alarm_armed_away
+  alias: '[Alarm] Away Mode Armed'
+  initial_state: true
+  trigger:
+    - platform: state
+      entity_id: alarm_control_panel.xiaomi_gateway_alarm
+      to: 'armed_away'
+  action:
+    - service: notify.ALL_DEVICES
+      data:
+        message: "* Alarma Activada*. Adios :)"
+
+    
+- id: alarm_disarmed
+  alias: '[Alarm] Disarmed'
+  initial_state: true
+  trigger:
+  - platform: state
+    entity_id: alarm_control_panel.xiaomi_gateway_alarm
+    to: 'disarmed'
+  action:
+    - service: notify.ALL_DEVICES
+      data:
+        message: "Alarma *desactivada*"
+
+- id: alarm_triggered
+  alias: '[Alarm] Triggered'
+  initial_state: true
+  trigger:
+   - platform: state
+     entity_id: alarm_control_panel.xiaomi_gateway_alarm
+     to: 'triggered'
+  action:
+    - service: notify.ALL_DEVICES
+      data:
+        title: "¡¡¡AVISO!!!"
+        message: "HA SALTADO LA ALARMA!!!"
+        data:
+         push:
+          category: 'alarma'
+    - service: notify.telegram  
+      data:
+       message: 'HA SALTADO LA ALARMA!!! {{ states[states.alarm_control_panel.xiaomi_gateway_alarm.attributes.changed_by.s<plit(".")[0]][ states.alarm_control_panel.xiaomi_gateway_alarm.attributes.changed_by.split(".")[1]].name }}'
+
+
+- id: 'Notificacion alarma'
+  alias: Notificacion alarma
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.motion_sensor_158d0001bd0bac
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: alarm_control_panel.xiaomi_gateway_alarm
+    state: armed_away
+  action:
+  - service: notify.telegram_call
+    data:
+      message: Ha saltado la alarma
+  - service: camera.snapshot
+    target:
+      entity_id: camera.camara_laia_hd
+    data:
+      filename: /config/camara/alarma.jpg
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 2
+      milliseconds: 0
+  - service: notify.telegram
+    data:
+      data:
+        photo:
+        - file: /config/camara/alarma.jpg
+          caption: Alarma
+      message: alarma
+  - service: camera.record
+    data:
+#     filename: /config/camara/alarma_{{ now().strftime("%Y%m%d-%H%M%S") }}.mp4
+     filename: /config/camara/alarma.mp4
+     duration: 15
+    target:
+     entity_id: camera.camara_laia_hd
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 30
+      milliseconds: 0
+  - service: notify.telegram
+    data:
+      data:
+        video:
+         - file: /config/camara/alarma.mp4
+           caption: Alarma
+      message: alarma video
+
+
+
+
+
+

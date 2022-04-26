@@ -1,0 +1,218 @@
+########programacion de encendido automatico luces efecto amanecer y atardecer#####
+########DEMO###################
+
+- alias: Amanecer acuario demo
+  initial_state: true
+  trigger:
+    - platform: state
+      entity_id: input_boolean.onledacuariodemo
+      from: 'off'
+      to: 'on' 
+  action:
+   - service: light.turn_on
+     data:
+      entity_id: light.acuario
+      rgb_color: [0, 0, 64]
+   - delay: '00:00:05'
+   - service: light.turn_on
+     data:
+      entity_id: light.acuario
+      rgb_color: [0, 0, 128]
+   - delay: '00:00:05'
+   - service: light.turn_on
+     data:
+      entity_id: light.acuario
+      rgb_color: [0, 0, 192]
+   - delay: '00:00:05'
+   - service: light.turn_on
+     data:
+      entity_id: light.acuario
+      rgb_color: [0, 0, 255]     
+   - delay: '00:00:05'   
+   - service: light.turn_on
+     data:
+      entity_id: light.acuario
+      rgb_color: [88, 33, 255]
+   - delay: '00:00:05'
+   - service: light.turn_on
+     data:
+      entity_id: light.acuario
+      rgb_color: [162, 71, 255]
+   - delay: '00:00:05'
+   - service: light.turn_on
+     data:
+      entity_id: light.acuario
+      rgb_color: [255, 71, 71]
+   - delay: '00:00:05'   
+   - service: light.turn_on
+     data:
+      entity_id: light.acuario
+      rgb_color: [255, 162, 71] 
+   - delay: '00:00:05'
+   - service: light.turn_on
+     data:
+      entity_id: light.acuario
+      rgb_color: [255, 218, 108]
+   - delay: '00:00:05'
+   - service: light.turn_on
+     data:
+      entity_id: light.acuario
+      rgb_color: [255, 255, 145]
+   - delay: '00:00:05'
+   - service: light.turn_on
+     data:
+      entity_id: light.acuario
+      rgb_color: [255, 255, 255]
+   - delay: '00:00:05'
+   - service: input_boolean.turn_off
+     data:
+      entity_id: input_boolean.onledacuariodemo
+
+- alias: ON blue acuario demo
+  initial_state: true
+  trigger:
+    - platform: state
+      entity_id: input_boolean.onledacuariodemo2
+      from: 'off'
+      to: 'on'
+  action:
+   - service: light.turn_on
+     data:
+      entity_id: light.acuario
+      rgb_color: [192, 192, 255]
+   - delay: '00:00:05'
+   - service: light.turn_on
+     data:
+      entity_id: light.acuario
+      rgb_color: [128, 128, 255]
+   - delay: '00:00:05'
+   - service: light.turn_on
+     data:
+      entity_id: light.acuario
+      rgb_color: [64, 64, 255]
+   - delay: '00:00:05'
+   - service: light.turn_on
+     data:
+      entity_id: light.acuario
+      rgb_color: [0, 0, 255]
+   - service: input_boolean.turn_off
+     data:
+      entity_id: input_boolean.onledacuariodemo2
+   
+- alias: Atardecer acuario demo
+  initial_state: true
+  trigger:
+    - platform: state
+      entity_id: input_boolean.onledacuariodemo3
+      from: 'off'
+      to: 'on'
+  action:
+   - service: light.turn_on
+     data:
+      entity_id: light.acuario
+      rgb_color: [0, 0, 192]
+   - delay: '00:00:10'
+   - service: light.turn_on
+     data:
+      entity_id: light.acuario
+      rgb_color: [0, 0, 128]
+   - delay: '00:00:10'
+   - service: light.turn_on
+     data:
+      entity_id: light.acuario
+      rgb_color: [0, 0, 64]
+   - delay: '00:00:10'
+   - service: light.turn_off
+     data:
+      entity_id: light.acuario
+   - service: input_boolean.turn_off
+     data:
+      entity_id: input_boolean.onledacuariodemo3
+      
+- alias: tormenta acuario demo
+  initial_state: true
+  trigger:
+    - platform: state
+      entity_id: input_boolean.tormenta
+      from: 'off'
+      to: 'on'
+  action:
+   - service: light.turn_on
+     data:
+      entity_id: light.acuario
+      rgb_color: [192, 192, 255]
+   - delay: '00:00:05'
+   - service: light.turn_on
+     data:
+      entity_id: light.acuario
+      rgb_color: [128, 128, 255]
+   - delay: '00:00:05'
+   - service: light.turn_on
+     data:
+      entity_id: light.acuario
+      rgb_color: [64, 64, 255]
+   - delay: '00:00:05'
+   - service: light.turn_on
+     data:
+      entity_id: light.acuario
+      rgb_color: [0, 0, 255]
+   - delay: '00:00:10'
+   - service: light.turn_on
+     data:
+      entity_id: light.acuario
+      effect: white_strobe
+   - service: light.turn_on
+     data:
+      entity_id: light.acuario
+      rgb_color: [0, 0, 255]
+   - service: light.turn_on
+     data:
+      entity_id: light.acuario
+      effect: white_strobe
+   - service: light.turn_on
+     data:
+      entity_id: light.acuario
+      rgb_color: [0, 0, 255]
+   - delay: '00:00:05'
+   - service: light.turn_on
+     data:
+      entity_id: light.acuario
+      effect: white_strobe
+   - delay: 
+      milliseconds: 500
+   - service: light.turn_on
+     data:
+      entity_id: light.acuario
+      rgb_color: [0, 0, 255]
+   - delay: '00:00:15'
+   - service: light.turn_on
+     data:
+      entity_id: light.acuario
+      effect: white_strobe
+   - service: light.turn_on
+     data:
+      entity_id: light.acuario
+      rgb_color: [0, 0, 255]
+   - service: light.turn_on
+     data:
+      entity_id: light.acuario
+      effect: white_strobe      
+   - delay:
+      milliseconds: 500
+   - service: light.turn_on
+     data:
+      entity_id: light.acuario
+      rgb_color: [0, 0, 255]
+   - delay: '00:00:05'
+   - service: light.turn_on
+     data:
+      entity_id: light.acuario
+      effect: white_strobe
+   - service: light.turn_on
+     data:
+      entity_id: light.acuario
+      rgb_color: [0, 0, 255]
+   - delay: '00:00:05'
+   - service: input_boolean.turn_off
+     data:
+      entity_id: input_boolean.tormenta

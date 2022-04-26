@@ -1,0 +1,185 @@
+#input bolean detector de movimiento encender luces####
+- alias: Encender Luces salon
+  initial_state: true
+  trigger:
+    - platform: state
+      entity_id: input_boolean.onluzsalon
+      from: 'off'
+      to: 'on'  
+  action:
+    - service: switch.turn_on
+      entity_id: switch.plug_158d0001b86988
+
+- alias: Encender Luces Gateway
+  trigger:
+    - platform: state
+      entity_id: input_boolean.onluzgateway
+      from: 'off'
+      to: 'on'  
+  action:    
+    - service: light.turn_on
+      entity_id: light.gateway_light_7811dcaf1a59
+      data:
+        rgb_color: [255,255,255]
+        brightness: 255     
+ 
+#detector de movimiento apagar luces####
+- alias: apagar Luces salon
+  initial_state: true
+  trigger:
+    - platform: state
+      entity_id: input_boolean.onluzsalon
+      from: 'on'
+      to: 'off'  
+  action:
+    - service: switch.turn_off
+      entity_id: switch.plug_158d0001b86988
+
+- alias: apagar Luces Gateway
+  trigger:
+    - platform: state
+      entity_id: input_boolean.onluzgateway
+      from: 'on'
+      to: 'off'  
+  action:    
+    - service: light.turn_off
+      entity_id: light.gateway_light_7811dcaf1a59
+     
+ 
+ 
+#luz salon entresemana desde 6:30AM a salida del sol#####
+- alias: Motion luz salon
+  initial_state: true
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.motion_sensor_158d0001bd0bac
+      from: 'off'
+      to: 'on'
+  condition:
+    - condition: state
+      entity_id: switch.plug_158d0001b86988
+      state: 'off'
+    - condition: sun
+      before: sunrise
+      before_offset: '-00:15:00'         
+    - condition: time
+      after: '06:30:00'
+      before: '08:30:00'
+      weekday:
+       - mon
+       - tue
+       - wed
+       - thu
+       - fri 
+       - sat
+  action:
+    - service: input_boolean.turn_on
+      entity_id: input_boolean.onluzsalon
+      
+#luz gateway desde puesta del sol a salida del sol##### 
+- alias: Motion luz gateway
+  initial_state: true
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.motion_sensor_158d0001bd0bac
+      from: 'off'
+      to: 'on'
+  condition:
+    - condition: state
+      entity_id: input_boolean.alarma_casa
+      state: 'off'    
+    - condition: state
+      entity_id: light.gateway_light_7811dcaf1a59
+      state: 'off'
+    - condition: time
+      after: '23:00:00'
+      before: '06:30:00'
+  action:
+    - service: input_boolean.turn_on
+      entity_id: input_boolean.onluzgateway 
+
+
+#luz gateway desde puesta del sol a salida del sol con alarma activada##### 
+- alias: Motion luz gateway alarm
+  initial_state: true
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.motion_sensor_158d0001bd0bac
+      from: 'off'
+      to: 'on'
+  condition:
+    - condition: state
+      entity_id: input_boolean.alarma_casa
+      state: 'on'    
+    - condition: state
+      entity_id: light.gateway_light_7811dcaf1a59
+      state: 'off'
+    - condition: time
+      after: '23:00:00'
+      before: '06:30:00'
+  action:
+    - service: light.turn_on
+      data:
+       entity_id: light.gateway_light_7811dcaf1a59
+       rgb_color: [255, 0, 0]
+    - delay: '00:00:01'
+    - service: light.turn_on
+      data:
+       entity_id: light.gateway_light_7811dcaf1a59
+       rgb_color: [255, 255, 255]
+    - delay: '00:00:01'
+    - service: light.turn_on
+      data:
+       entity_id: light.gateway_light_7811dcaf1a59
+       rgb_color: [255, 0, 0]
+    - delay: '00:00:01'
+    - service: light.turn_on
+      data:
+       entity_id: light.gateway_light_7811dcaf1a59
+       rgb_color: [255, 255, 255]     
+    - delay: '00:00:01'   
+    - service: light.turn_on
+      data:
+       entity_id: light.gateway_light_7811dcaf1a59
+       rgb_color: [255, 0, 0]
+    - delay: '00:00:01'
+    - service: light.turn_on
+      data:
+       entity_id: light.gateway_light_7811dcaf1a59
+       rgb_color: [255, 255, 255]
+    - delay: '00:00:01'
+    - service: light.turn_on
+      data:
+       entity_id: light.gateway_light_7811dcaf1a59
+       rgb_color: [255, 0, 0]
+    - delay: '00:00:01'
+    - service: light.turn_on
+      entity_id: light.gateway_light_7811dcaf1a59
+      data:
+        rgb_color: [255,255,255]
+        brightness: 255
+    - service: input_boolean.turn_on
+      entity_id: input_boolean.onluzgateway     
+#####apaga luz por movimiento por 2 minutos######## 
+- alias: Motion off
+  initial_state: true
+  trigger:
+   - platform: state
+     entity_id: binary_sensor.motion_sensor_158d0001bd0bac
+     to: 'off'
+     for:
+      minutes: 2
+  condition:
+    condition: or
+    conditions:
+    - condition: state
+      entity_id: input_boolean.onluzgateway
+      state: 'on'
+    - condition: state
+      entity_id: input_boolean.onluzsalon
+      state: 'on'  
+  action:
+    - service: input_boolean.turn_off
+      entity_id: input_boolean.onluzgateway
+    - service: input_boolean.turn_off
+      entity_id: input_boolean.onluzsalon 

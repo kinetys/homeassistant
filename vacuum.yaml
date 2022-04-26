@@ -1,0 +1,75 @@
+- id: Geoffrey INFORME ERROR
+  alias: Geoffrey INFORME ERROR
+  initial_state: true
+  trigger:
+    - platform: state
+      entity_id: sensor.vacuum_cleaner_status_sensor
+      to: 'Error'
+    - platform: state
+      entity_id: sensor.vacuum_cleaner_status_sensor
+      to: 'In Error'
+    - platform: state
+      entity_id: sensor.vacuum_cleaner_status_sensor
+      to: 'Charging Error'
+  action:
+    - service: notify.telegram
+      data:
+        title: '*Geoffrey ERROR*'
+        message: >-
+          {% if is_state('sensor.vacuum_cleaner_error_sensor', 'No Error')  %}
+            {{states.sensor.vacuum_status.state}}
+          {% else %}
+            {{states.sensor.vacuum_cleaner_error_sensor.state}}
+          {% endif %}
+          
+- id: Geoffrey PROBLEMA RESUELTO
+  alias: Geoffrey PROBLEMA RESUELTO
+  initial_state: true
+  trigger:
+    - platform: state
+      entity_id: sensor.vacuum_cleaner_error_sensor
+      to: 'No Error'
+  action:
+    - service: notify.telegram
+      data:
+        title: '*Geoffrey*'
+        message: Problema resuelto.
+
+- id: Geoffrey INICIO LIMPIEZA
+  alias: Geoffrey INICIO LIMPIEZA
+  initial_state: true
+  trigger:
+    - platform: state
+      entity_id: vacuum.geoffrey
+      to: 'cleaning'     
+  action:
+    - service: notify.telegram
+      data:
+        title: '*Geoffrey*'
+        message: Iniciando la limpieza.
+                
+- id: Geoffrey LIMPIEZA FINALIZADA
+  alias: Geoffrey LIMPIEZA FINALIZADA
+  initial_state: true
+  trigger:
+    - platform: state
+      entity_id: vacuum.geoffrey
+      to: 'returning'
+  action:
+    - service: notify.telegram
+      data:
+        title: '*Geoffrey*'
+        message: Volviendo a la base de carga.
+          
+- id: Geoffrey CARGANDO
+  alias: Geoffrey CARGANDO
+  initial_state: true
+  trigger:
+    - platform: state
+      entity_id: vacuum.geoffrey
+      to: 'docked'
+  action:
+    - service: notify.telegram
+      data:
+        title: '*Geoffrey*'
+        message: En la base de carga y cargando.
