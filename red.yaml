@@ -1,0 +1,92 @@
+- alias: "Notificacion IP Publica"
+  initial_state: true
+  trigger:
+   platform: state
+   entity_id: sensor.ippublica
+   from: 'True'
+   to: 'False'
+   for:
+      hours: 0
+      minutes: 15
+      seconds: 0
+  action:
+   service: notify.telegram
+   data:
+    message: 'Las IPs no coinciden entre IP Publica y las DNS (duckdns o no-ip) duckdns:{{states.sensor.duckdns.state}} IP publica:{{states.sensor.no_ip.state}} No-IP:{{states.sensor.mi_ip_publica.state}}'
+    
+    
+- alias: Error NO-IP y IP Publica
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: sensor.no_ippublica
+    from: 'True'
+    to: 'False'
+    for:
+      hours: 0
+      minutes: 15
+      seconds: 0
+  action:
+  - service: notify.telegram
+    data:
+      title: ERROR con la IP Publica
+      message: Error con la IP publica, no coincide con NO-IP      
+  - service: persistent_notification.create
+    data:
+      message: "Error con la IP publica, no coincide con NO-IP"
+      title: "ERROR con la IP Publica"  
+  - service: notify.telegram
+    data:
+     message: "Actualizamos IP de NO-IP?"
+     data:
+       inline_keyboard:
+         - "Si:/stopnoip" 
+         - 'No:/nothing'    
+
+- alias: Error DuckDNS y IP Publica
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: sensor.duckdnsippublica
+    from: 'True'
+    to: 'False'
+    for:
+      hours: 0
+      minutes: 15
+      seconds: 0
+  action:
+  - service: notify.telegram
+    data:
+      title: ERROR con la IP Publica
+      message: Error con la IP publica, no coincide con DuckDNS      
+  - service: persistent_notification.create
+    data:
+      message: "Error con la IP publica, no coincide con DuckDNS"
+      title: "ERROR con la IP Publica" 
+  - service: notify.telegram
+    data:
+     message: "Actualizamos IP de DuckDNS?"
+     data:
+       inline_keyboard:
+         - "Si:/resetduckdns" 
+         - 'No:/nothing'         
+  
+  
+- alias: "parar noip2"
+  initial_state: true
+  trigger:
+   platform: state
+   entity_id: switch.noip2
+   from: 'on'
+   to: 'off'
+   for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+  action:
+   - service: notify.telegram
+     data:
+      message: 'Se ha parado el servicio No-IP'    
+   - service: script.turn_on
+     data:
+       entity_id: script.stop_noip      
