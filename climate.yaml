@@ -55,7 +55,7 @@
 
 - platform: floureon
   name: Termostato Casa
-  mac: A0:43:B0:06:A3:A7
+  mac: 00:00:00:00:00:00
   host: 192.168.1.73
   use_external_temp: false    
 
