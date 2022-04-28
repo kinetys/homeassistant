@@ -15,7 +15,7 @@
     entity_id: sensor.consumo_actual
     for:
       hours: 0
-      minutes: 3
+      minutes: 1
       seconds: 0
     above: '3300'
   condition: []

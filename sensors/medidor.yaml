@@ -1,3 +1,7 @@
+
+
+
+#####medidor de consumo general casa######
 - platform: template
   sensors:
    consumo_actual_casa:
@@ -22,3 +26,27 @@
      value_template: "{{ (( states('var.luz_energia_mensual')|float ) )|round(2) }}"   
      unit_of_measurement: 'kWh'
      device_class: "energy"
+
+
+##############enchufe medidor consumo lavadora
+
+- platform: template
+  sensors:
+    lavadora_estado:
+     friendly_name: "Lavadora estado"
+     value_template: >
+       {% if states("sensor.enchufe_lavadora_potencia")|float == 0  %}
+         Off
+       {% elif states("sensor.enchufe_lavadora_potencia")|float <= 8 %}
+         Standby
+       {% else %}
+         Drying
+       {% endif %}
+     icon_template: >
+       {% if states("switch.enchufe_lavadora") == "off"  %}
+       mdi:tumble-dryer-alert
+       {% elif states("sensor.enchufe_lavadora_potencia")|float <= 2  %}
+       mdi:tumble-dryer-off
+       {% else %}
+       mdi:tumble-dryer
+       {% endif %}

@@ -1,0 +1,18 @@
+- id: 'lavadora_termina'
+  alias: El ciclo de la secadora ha terminado
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: sensor.lavadora_estado
+    from: Drying
+    to: 'Off'
+    for:
+      hours: 0
+      minutes: 1
+      seconds: 0
+  condition: []
+  action:
+  - service: tts.google_say
+    data:
+      entity_id: media_player.habitacion_carla_speaker
+      message: LA lavadora ha terminado
